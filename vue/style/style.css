@@ -1,0 +1,72 @@
+#ttGrid{
+    display: grid;
+
+    /* 1fr correspond a la fraction : 1fr avec 10 lignes -> 1/10, 1fr avec 5 lignes -> 1/5 */
+    grid-template-columns: 50px repeat(5, 1fr); /* Nombre de colonnes et place prise par chacune */
+    grid-template-rows: repeat(13, 1fr);
+
+    column-gap: 5px; /* Espacement */
+
+    border-collapse: collapse;
+    border: 2px solid red;
+}
+
+.cell{
+    margin: 0;
+    height: 7vh;
+
+    line-height: 7vh; /* Permet de centrer verticalement le text */
+    text-align: center;
+
+    border: 2px solid blue;
+}
+
+
+
+/*
+-----------------------------------
+-------------- Popup --------------
+-----------------------------------
+*/
+
+#blockBackground{
+    position: absolute;
+
+    left: -0;
+    top: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    z-index: 9;
+
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+
+#popupArticle{
+    position: absolute;
+
+    left: 35vw;
+    top: 30vh;
+
+    width: 30vw;
+    height: 40vh;
+
+    z-index: 10;
+
+    background-color: white;
+}
+
+
+#closePopupButton{
+    position: absolute;
+
+    right: 0;
+    top: 0;
+}
+
+
+#popupTitle{
+    text-align: center;
+}

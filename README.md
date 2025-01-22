@@ -40,7 +40,7 @@ Il est possible de gagner des jetons en fonction du travail montré lors des ré
 
 # Informations du projet
 
-Intitulé : 
+**Directeur d'école : gestion des plannings**
 
 Réaliser un système automatique de génération d'emplois du temps en fonction de plusieurs contraintes.
 
