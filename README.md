@@ -3,6 +3,8 @@
 
 - 14/01/25 à 16h30
 - 21/01/25 à 16h15
+- 27/01/25 à 8h15 (en TP)
+- 04/02/25 à 16h30
 
 ## Dates importantes
 
@@ -34,7 +36,7 @@ D. Telisson : Client (mail : utiliser l'annuaire de l'intranet)
 Nombre de jetons restant : 4
 
 Activités choisies : 
-- Faire une démo client ?
+- Faire une démo client
 
 Il est possible de gagner des jetons en fonction du travail montré lors des réunions avec le client.
 
