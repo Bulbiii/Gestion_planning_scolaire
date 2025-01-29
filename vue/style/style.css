@@ -1,11 +1,59 @@
+body{
+    display: flex;
+
+    flex-direction: column;
+}
+
+/*
+-----------------------------------------------
+-------------- Main frame header --------------
+-----------------------------------------------
+*/
+
+header{
+    display: flex;
+
+    justify-content: space-between;
+
+    border: 2px solid pink;
+}
+
+
+#dateInfoContainer{
+    display: flex;
+
+    border: 2px solid orange;
+}
+
+
+#userInfoContainer{
+    display: flex;
+
+    border: 2px solid green;
+}
+
+
+header p{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+
+/*
+---------------------------------------
+-------------- TimeTable --------------
+---------------------------------------
+*/
+
+
 #ttGrid{
     display: grid;
 
-    /* 1fr correspond a la fraction : 1fr avec 10 lignes -> 1/10, 1fr avec 5 lignes -> 1/5 */
-    grid-template-columns: 50px repeat(5, 1fr); /* Nombre de colonnes et place prise par chacune */
+    /* 1fr correspon to a fraction : 1fr with 10 lines -> 1/10, 1fr with 5 lines -> 1/5 */
+    grid-template-columns: 50px repeat(5, 1fr); /* Number of columns and the space taken by each of them*/
     grid-template-rows: repeat(13, 1fr);
 
-    column-gap: 5px; /* Espacement */
+    column-gap: 5px; /* Spacing */
 
     border-collapse: collapse;
     border: 2px solid red;
@@ -13,9 +61,9 @@
 
 .cell{
     margin: 0;
-    height: 7vh;
+    height: 6vh;
 
-    line-height: 7vh; /* Permet de centrer verticalement le text */
+    line-height: 6vh; /* Allow to vertically center text */
     text-align: center;
 
     border: 2px solid blue;
@@ -69,4 +117,23 @@
 
 #popupTitle{
     text-align: center;
+}
+
+
+
+
+
+
+
+/*
+----------------------------------------
+---------------- Footer ----------------
+----------------------------------------
+*/
+
+
+
+
+footer{
+    border: 2px solid brown;
 }

@@ -10,3 +10,8 @@ function create_element(type, parent, id, content=null){
 
     return element;
 }
+
+
+async function sleep(ms){
+    return new Promise(resolve => setTimeout(resolve, ms));
+}

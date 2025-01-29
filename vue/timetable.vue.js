@@ -1,8 +1,6 @@
 // tt = timetable
 
-function create_edt(){
-    let container = document.querySelector("body");
-
+function create_edt(container, schedule){
     let ttSection = create_element("section", container, "timetableSection");
     let ttGrid = create_element("div", ttSection, "ttGrid");
 
@@ -54,7 +52,7 @@ function add_time_titles(grid){
 function add_cells(grid){
     for (columnIndex=0; columnIndex < 5; columnIndex++){
         for (rowIndex=0; rowIndex < 12; rowIndex++){
-            let cell = create_element("button", grid, "cell_"+days[columnIndex]+"_"+rowIndex, columnIndex+"_"+rowIndex);
+            let cell = create_element("button", grid, "cell_"+days[columnIndex]+"_"+rowIndex);
             cell.disabled = true;
 
             cell.style.gridColumnStart = columnIndex + 2; /* start at 1 and index 1 = time title */
@@ -74,6 +72,8 @@ function add_courses(schedule){
             cell.addEventListener("click", select_course); // creating popup
 
             cell.innerHTML = schedule[day][hour]; // course's name
+
+            cell.classList.add("courseCell");
         }
     }
 }
@@ -119,4 +119,21 @@ function close_popup(){
 
     let blockBackground = document.querySelector("#blockBackground");
     tt.removeChild(blockBackground);
+}
+
+
+
+
+function update_edt(weekNb){
+    let cells = document.querySelectorAll(".courseCell");
+
+    cells.forEach(cell => {
+        cell.innerHTML = "";
+    });
+
+    if (weekNb % 2 == 0){
+        add_courses(schedule);
+    } else {
+        add_courses(schedule_bis) // schedule_bis is temporary
+    }
 }
