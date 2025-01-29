@@ -3,7 +3,7 @@ function create_main_vue(){
     
     create_header(body);
 
-    create_edt(body, schedule);
+    create_tt(body, schedule);
 
     create_footer(body);
 }

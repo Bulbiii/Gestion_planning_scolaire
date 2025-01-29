@@ -16,10 +16,7 @@ function create_current_week_entry(container){
     let currentWeekEntry = create_element("input", container, "currentWeekEntry");
     
     currentWeekEntry.placeholder = "week number";
-    currentWeekEntry.value = 32;
-
-    currentWeekEntry.min = 1;
-    currentWeekEntry.max = 45;
+    currentWeekEntry.value = 32; // input's value
 
     currentWeekEntry.addEventListener("compositionstart", (e) => {
         currentWeekEntry.disabled = true; // allow to disable composition
@@ -35,43 +32,45 @@ function create_current_week_entry(container){
         let numberKeyCodes = Array.from(Array(10), (_, i) => i + 48); // 48 - 57 -> 0 - 9 ;
         let actionKeyCodes = [8].concat(Array.from(Array(4), (_, i) => i + 37)); // 8 -> backspace; 37 - 40 -> arrow keys
 
-        let isActionKey = actionKeyCodes.includes(e.keyCode);
+        let isActionKey = actionKeyCodes.includes(e.keyCode); // check if pressed key is one of the action keys
         
-        let isNumberKey = numberKeyCodes.includes(e.keyCode);
+        let isNumberKey = numberKeyCodes.includes(e.keyCode); // same for number keys
         let isBetween_1_50 = false;
 
+        // only check if a number key is pressed
         if (isNumberKey){
             let lastVal = e.target.value;
 
-            isBetween_1_50 = (lastVal + e.key < 50 && lastVal + e.key > 0);
+            isBetween_1_50 = (lastVal + e.key < 50 && lastVal + e.key > 0); // check if new value is between 1 and 50 included
         }
 
 
-        let isOk = isActionKey || e.ctrlKey || (isNumberKey && isBetween_1_50);
+        let isOk = isActionKey || e.ctrlKey || (isNumberKey && isBetween_1_50); // correct key
         
 
-        return isOk;
+        return isOk; // allow input change if key is ok
     };
 
 
 
-
+    // update tt if input has changed and if it's not empty
     currentWeekEntry.addEventListener("input", e => {
-        update_edt(currentWeekEntry.value);
+        if (currentWeekEntry.value != ""){
+            update_tt(currentWeekEntry.value);
+        }
     });
 }
 
 
-
+// allow to change week number using the left and right button
 function changeWeek(){
     let currentWeekEntry = document.querySelector("#currentWeekEntry");
 
-    if (this.id == "previousWeekButton"){
+    if (this.id == "previousWeekButton" && currentWeekEntry.value > 1){ // check if the left button was pressed and if the value is greater than 1 (to avoid value 0)
         currentWeekEntry.value -= 1;
-    } else {
+    } else if (this.id == "nextWeekButton" && currentWeekEntry.value < 50){ // same for right button and 50
         currentWeekEntry.value = Number(currentWeekEntry.value) + 1;
     }
-
-    update_edt(currentWeekEntry.value);
     
+    update_tt(currentWeekEntry.value);
 }

@@ -1,6 +1,6 @@
 // tt = timetable
 
-function create_edt(container, schedule){
+function create_tt(container, schedule){
     let ttSection = create_element("section", container, "timetableSection");
     let ttGrid = create_element("div", ttSection, "ttGrid");
 
@@ -68,12 +68,12 @@ function add_courses(schedule){
     for (const day in schedule) {
         for (const hour in schedule[day]){
             let cell = document.querySelector("#cell_"+day+"_"+(hour - 8)); //  hour start at 8 
-            cell.disabled = false; // activation du bouton
+            cell.disabled = false;
             cell.addEventListener("click", select_course); // creating popup
 
             cell.innerHTML = schedule[day][hour]; // course's name
 
-            cell.classList.add("courseCell");
+            cell.classList.add("courseCell"); // allowing to erase cell when updating tt
         }
     }
 }
@@ -82,12 +82,11 @@ function add_courses(schedule){
 function select_course(){
     let tt = document.querySelector("#timetableSection");
 
-    // permet de desactiver les interactions avec les elements non concernes
+    // allow to disable interactions with unwanted elements
     create_element("div", tt, "blockBackground");
-    // popup d'information du cours
+    // course's informations popup
     let popup = create_element("article", tt, "popupArticle");
 
-    // ajout du contenu de la popup
     add_popup_content(popup, this.innerHTML);
 
     let closePopupButton = create_element("button", popup, "closePopupButton", "X");
@@ -96,22 +95,23 @@ function select_course(){
 
 
 function add_popup_content(popup, courseTitle){
-    // Intitule du cours
+    // course's title
     let title = create_element("h2", popup, "popupTitle", courseTitle);
 
-    // Decription du cours
+    // course's description
     let desc = create_element("p", popup, "popupDesc", "Texte temporaire très intéressant");
 
-    // Heure de debut et de fin
+    // start and end hour
     let startHour = create_element("p", popup, "popupStartHour", "Heure départ : 8h00");
     let endHour = create_element("p", popup, "popupEndHour", "Heure de fin : 9h00");
 
-    // salle du cours
+    // course's room
     let room = create_element("p", popup, "popupRoom", "Room : 8C");
 }
 
 
 function close_popup(){
+    // popup's parent
     let tt =document.querySelector("#timetableSection");
 
     let popup = document.querySelector("#popupArticle");
@@ -124,13 +124,14 @@ function close_popup(){
 
 
 
-function update_edt(weekNb){
+function update_tt(weekNb){
     let cells = document.querySelectorAll(".courseCell");
 
     cells.forEach(cell => {
-        cell.innerHTML = "";
+        cell.innerHTML = ""; // remove content
     });
 
+    // temporary
     if (weekNb % 2 == 0){
         add_courses(schedule);
     } else {
