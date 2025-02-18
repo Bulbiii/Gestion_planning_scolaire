@@ -7,4 +7,6 @@ print_r(selectAll_courses($conn));
 
 
 include "db/db_disconnect.php";
+
+//test
 ?>
