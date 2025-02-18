@@ -23,6 +23,7 @@ Student :
             [mail] => jeandu93@mail.fr 
             [password] => password )
 - selectAll_student($conn) -> tableau de student
+- select_student_id_user($conn,$id_user) -> récupère un student à partir de son id_user
 - insert_student($conn,$name,$surname,$classe_name,$mail,$password) 
 - update_student($conn,$id,$name,$surname,$class_name,$mail,$password)
 - delete_student($conn,$id)
@@ -60,6 +61,7 @@ Teacher :
                                                    [h_end] => 10:00:00 
                                                    [description] => Grasse matiné ) ) ) 
 - selectAll_teacher($conn) -> tableau de prof
+- select_teacher_id_user($conn,$id_user) -> sélectionne un teacher à partir de son id user
 - insert_teacher($conn,$name,$surname,$mail,$password)
 - update_teacher($conn,$id,$name,$surname,$mail,$password)
 - delete_teacher($conn,$id)
@@ -75,6 +77,7 @@ Admin :
             [mail] => ludo.herve@mail.fr 
             [password] => aaaaa )
 - selectAll_admin($conn) -> tableau d'admin
+- select_admin_id_user($conn,$id_user) -> sélectionne un admin à partir de son id user
 - insert_admin($conn,$name,$surname,$mail,$password)
 - update_admin($conn,$id,$name,$surname,$mail,$password)
 - delete_admin($conn,$id)
@@ -153,6 +156,15 @@ function select_student($conn,$id){
 	return $ret ;
 }
 
+// Sélectionne un student
+function select_student_id_user($conn,$id_user){
+    $sql="SELECT s.id,s.name,s.surname,s.class_name,s.user_id,u.role,u.mail,u.password FROM student s JOIN user u ON u.id=s.user_id WHERE s.user_id=$id_user" ;
+	if($ret=mysqli_query($conn, $sql)){
+		$ret=mysqli_fetch_assoc($ret);
+	}
+	return $ret ;
+}
+
 // Selectionne tous les students
 function selectAll_student($conn){
     $sql="SELECT s.id,s.name,s.surname,s.class_name,s.user_id,u.role,u.mail,u.password FROM student s JOIN user u ON u.id=s.user_id";
@@ -217,6 +229,32 @@ function select_teacher($conn,$id){
 	if($teacher=mysqli_query($conn, $sql_teacher)){
 		$teacher=mysqli_fetch_assoc($teacher);
 	}
+
+    // On récupère les subject du prof
+    $subjects=selectAll_subject_teacher($conn,$id);
+    $teacher["subject"]=$subjects;
+
+    // On récupère les classes du prof
+    $class=selectAll_class_teacher($conn,$id);
+    $teacher["class"]=$class;
+
+    // On récupère les contraintes du prof
+    $constraints=selectAll_constraint_teacher($conn,$id);
+    $teacher["constraint"]=$constraints;
+
+	return $teacher ;
+}
+
+// Sélectionne un prof à partir de son id user
+function select_teacher_id_user($conn,$id_user){
+    // On récupère les données du prof + user
+    $sql_teacher="SELECT t.id,t.name,t.surname,t.id_user,u.role,u.mail,u.password FROM teacher t JOIN user u ON u.id=t.id_user WHERE t.id_user=$id_user" ;
+	if($teacher=mysqli_query($conn, $sql_teacher)){
+		$teacher=mysqli_fetch_assoc($teacher);
+	}
+
+    // On récupère l'id du prof
+    $id=$teacher['id'];
 
     // On récupère les subject du prof
     $subjects=selectAll_subject_teacher($conn,$id);
@@ -344,6 +382,15 @@ function select_admin($conn,$id){
 	return $ret ;
 }
 
+// Sélectionne un admin à partir de son id user
+function select_admin_id_user($conn,$id_user){
+    $sql="SELECT a.id,a.name,a.surname,a.user_id,u.role,u.mail,u.password FROM `admin` a JOIN user u ON u.id=a.user_id WHERE a.user_id=$id_user" ;
+	if($ret=mysqli_query($conn, $sql)){
+		$ret=mysqli_fetch_assoc($ret);
+	}
+	return $ret ;
+}
+
 // Selectionne tous les students
 function selectAll_admin($conn){
     $sql="SELECT a.id,a.name,a.surname,a.user_id,u.role,u.mail,u.password FROM `admin` a JOIN user u ON u.id=a.user_id";
@@ -370,4 +417,4 @@ function delete_admin($conn,$id){
     return $res_admin && $res_user;
 }
 
-?>
+
