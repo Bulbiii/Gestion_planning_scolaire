@@ -18,11 +18,11 @@ if(isset($_POST['mail']) && isset($_POST['passwd'])){
         $role=$user_temp['role'];
         $id_user=$user_temp['id'];
 
-        if($role=="teacher"){ // le teacher
+        if($role=="teacher"){ // ... le teacher
             $user=select_teacher_id_user($conn,$id_user);
-        }elseif($role=="student"){ // le student
+        }elseif($role=="student"){ // ... le student
             $user=select_student_id_user($conn,$id_user);
-        }elseif($role=="admin"){ // l'admin
+        }elseif($role=="admin"){ // ... l'admin
             $user=select_admin_id_user($conn,$id_user);
         }
 
