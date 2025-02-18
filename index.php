@@ -1,8 +1,8 @@
 <?php
-if(!isset($_SESSION['role'])){
+/*if(!isset($_SESSION['role'])){
     header("Location: page_authentification.php");
 }
-session_start() ;
+session_start() ;*/
 ?>
 
 <!DOCTYPE html>
