@@ -2,7 +2,7 @@
 /*
 --------- RECAP ----------
 
-Sélectionner :
+User :
 
 - select_user_mail_mdp($conn,$mail,$mdp) -> selectionne un user à partir de mail et mdp :
     Array ( [id] => 2 
@@ -10,6 +10,9 @@ Sélectionner :
             [mail] => mich.jack@mail.fr 
             [password] => azerty )
 - select_user($conn,$id) -> renvoie pareil à partir de l'id
+
+Student :
+
 - select_student($conn,$id) :
     Array ( [id] => 7 
             [name] => Jean 
@@ -20,6 +23,12 @@ Sélectionner :
             [mail] => jeandu93@mail.fr 
             [password] => password )
 - selectAll_student($conn) -> tableau de student
+- insert_student($conn,$name,$surname,$classe_name,$mail,$password) 
+- update_student($conn,$id,$name,$surname,$class_name,$mail,$password)
+- delete_student($conn,$id)
+
+Teacher :
+
 - select_teacher($conn,$id) :
     Array ( [id] => 1 
             [name] => Michel 
@@ -51,6 +60,12 @@ Sélectionner :
                                                    [h_end] => 10:00:00 
                                                    [description] => Grasse matiné ) ) ) 
 - selectAll_teacher($conn) -> tableau de prof
+- insert_teacher($conn,$name,$surname,$mail,$password)
+- update_teacher($conn,$id,$name,$surname,$mail,$password)
+- delete_teacher($conn,$id)
+
+Admin :
+
 - select_admin($conn,$id) :
     Array ( [id] => 1 
             [name] => Ludovic 
@@ -60,27 +75,10 @@ Sélectionner :
             [mail] => ludo.herve@mail.fr 
             [password] => aaaaa )
 - selectAll_admin($conn) -> tableau d'admin
-
-Créer :
-
-- insert_student($conn,$name,$surname,$classe_name,$mail,$password) 
-- insert_teacher($conn,$name,$surname,$mail,$password)
 - insert_admin($conn,$name,$surname,$mail,$password)
-(Crée le user associé)
-
-Modifier :
-
-- update_student($conn,$id,$name,$surname,$class_name,$mail,$password)
-- update_teacher($conn,$id,$name,$surname,$mail,$password)
 - update_admin($conn,$id,$name,$surname,$mail,$password)
-(Modifie le user associé)
-
-Supprimer :
-
-- delete_student($conn,$id)
-- delete_teacher($conn,$id)
 - delete_admin($conn,$id)
-(supprime le user associé)
+
 
 
 */
@@ -372,4 +370,4 @@ function delete_admin($conn,$id){
     return $res_admin && $res_user;
 }
 
-
+?>

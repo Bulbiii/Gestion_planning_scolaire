@@ -32,7 +32,9 @@ Courses :
             [classroom] => Array ( [num] => 205 
                                    [specificity] => INFO ) )
 - selectAll_courses($conn) -> tableau de courses
-
+- insert_courses($conn, $day, $h_start,$h_end,$subject_id,$teacher_id,$class_name,$classroom_num)
+- update_courses($conn,$id, $day,$h_start,$h_end,$subject_id,$teacher_id,$class_name,$classroom_num)
+- delete_courses($conn, $id)
 
 Contrainte :
 
@@ -203,6 +205,28 @@ function selectAll_courses($conn){
         $courses[]=$cours ; // On range le teacher courant dans le tableau
 	}
 	return $courses;
+}
+
+// Crée un cours
+function insert_courses($conn, $day, $h_start,$h_end,$subject_id,$teacher_id,$class_name,$classroom_num){
+	$sql="INSERT INTO courses(`day`,h_start,h_end,subject_id,teacher_id,class_name,classroom_num) value('$day','$h_start','$h_end',$subject_id,$teacher_id,'$class_name',$classroom_num)";
+	$res=mysqli_query($conn,$sql);
+    return $res;
+}
+
+// Modifie un cours
+function update_courses($conn,$id, $day,$h_start,$h_end,$subject_id,$teacher_id,$class_name,$classroom_num){
+    $sql="UPDATE `courses` SET `day`='$day',`h_start`='$h_start',`h_end`='$h_end',subject_id=$subject_id,teacher_id=$teacher_id,class_name='$class_name',classroom_num=$classroom_num WHERE id=$id";
+    $res=mysqli_query($conn,$sql);
+    return $res;
+}
+
+// Supprime un cours
+function delete_courses($conn, $id){
+	
+	$sql="DELETE FROM courses WHERE id=$id" ;
+	$res=mysqli_query($conn,$sql);
+    return $res;
 }
 
 // ---------- CONTRAINTE ----------
