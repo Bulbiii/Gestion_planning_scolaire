@@ -2,7 +2,7 @@
 if(!isset($_SESSION['role'])){
     header("Location: page_authentification.php");
 }
-
+session_start() ;
 ?>
 
 <!DOCTYPE html>
