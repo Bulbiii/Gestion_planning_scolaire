@@ -53,12 +53,14 @@ Teacher :
                                                    [date] => 2025-02-04 
                                                    [h_start] => 08:00:00 
                                                    [h_end] => 15:00:00 
+                                                   [reccurent] => 1
                                                    [description] => Piscine ) 
                                     [1] => Array ( [id] => 3
                                                    [day] => Mercredi 
                                                    [date] => 2025-01-12 
                                                    [h_start] => 08:00:00 
                                                    [h_end] => 10:00:00 
+                                                   [recurrent] => 1
                                                    [description] => Grasse matiné ) ) ) 
 - selectAll_teacher($conn) -> tableau de prof
 - select_teacher_id_user($conn,$id_user) -> sélectionne un teacher à partir de son id user
@@ -295,7 +297,7 @@ function selectAll_class_teacher($conn,$id){
 
 // Selectionne toutes les contraintes d'un prof
 function selectAll_constraint_teacher($conn,$id_teacher){
-    $sql="SELECT `id`,`day`,`date`,h_start,h_end,`description` FROM `constraint` WHERE id_teacher=$id_teacher";
+    $sql="SELECT `id`,`day`,`date`,h_start,h_end,recurrent,`description` FROM `constraint` WHERE id_teacher=$id_teacher";
     $res=mysqli_query($conn,$sql);
 
     $tab=[] ; 
@@ -417,4 +419,4 @@ function delete_admin($conn,$id){
     return $res_admin && $res_user;
 }
 
-
+?>

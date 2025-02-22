@@ -45,11 +45,12 @@ Contrainte :
             [h_start] => 08:00:00 
             [h_end] => 15:00:00 
             [description] => Piscine 
+            [recurrent] => 0
             [id_teacher] => 1 )
 - selectAll_constraint($conn) -> tableau de toutes les constraint
 - selectAll_teacher_constraint($conn,$id_teacher) -> tableau de toutes les contraintes d'un prof
-- insert_constraint($conn,$id,$day,$date,$h_start,$h_end,$desc,$id_teacher)
-- update_constraint($conn,$id,$day,$date,$h_start,$h_end,$description)
+- insert_constraint($conn,$day,$date,$h_start,$h_end,$desc,$recurrent, $id_teacher)
+- update_constraint($conn,$id,$day,$date,$h_start,$h_end,$description,$recurrent)
 - delete_constraint($conn,$id)
 
 Subject :
@@ -265,15 +266,15 @@ function selectAll_teacher_constraint($conn,$id_teacher){
 }
 
 // Crée une contrainte
-function insert_constraint($conn,$id,$day,$date,$h_start,$h_end,$desc,$id_teacher){
-    $sql="INSERT INTO `constraint`(id, `day`, `date`,h_start,h_end, `description`,id_teacher) value($id,'$day','$date','$h_start','$h_end','$desc',$id_teacher)";
+function insert_constraint($conn,$day,$date,$h_start,$h_end,$desc,$recurrent, $id_teacher){
+    $sql="INSERT INTO `constraint`(`day`, `date`,h_start,h_end, `description`,recurrent, id_teacher) value('$day','$date','$h_start','$h_end','$desc','$recurrent',$id_teacher)";
     $res=mysqli_query($conn,$sql);
     return $res;
 }
 
 // Modifie une contrainte
-function update_constraint($conn,$id,$day,$date,$h_start,$h_end,$description){
-    $sql="UPDATE `constraint` SET `description`='$description',`day`='$day',`date`='$date',h_start='$h_start',h_end='$h_end' WHERE id=$id";
+function update_constraint($conn,$id,$day,$date,$h_start,$h_end,$description,$recurrent){
+    $sql="UPDATE `constraint` SET `description`='$description',`day`='$day',`date`='$date',h_start='$h_start',h_end='$h_end', recurrent=$recurrent WHERE id=$id";
     $res=mysqli_query($conn,$sql);
     return $res;
 }
