@@ -15,6 +15,7 @@ if(isset($_POST['mail']) && isset($_POST['passwd'])){
     // On récupère ...
 	if(isset($user_temp)){
 
+		// on récupère le role et l'id_user
         $role=$user_temp['role'];
         $id_user=$user_temp['id'];
 
@@ -29,6 +30,7 @@ if(isset($_POST['mail']) && isset($_POST['passwd'])){
 
         $_SESSION["role"]=$role;
         $_SESSION["user"]=$user;
+		$_SESSION['id']=$user['id'];
 
         // redirection
         header("Location: index.php");

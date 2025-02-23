@@ -19,6 +19,8 @@ Courses :
 - select_courses($conn,$id) :
     Array ( [id] => 1 
             [day] => monday 
+            [date] => 2025-02-11 
+            [recurrent] => 1 
             [h_start] => 08:00:00 
             [h_end] => 10:00:00 
             [class_name] => 3C 
@@ -29,14 +31,16 @@ Courses :
             [teacher] => Array ( [id] => 1 
                                  [name] => Michel 
                                  [surname] => Jackson ) 
-            [classroom] => Array ( [num] => 205 
-                                   [specificity] => INFO ) )
+            [classroom] => Array ( [num] => 1 
+                                   [specificity] => math ) )
 - selectAll_courses($conn) -> tableau de courses
-- insert_courses($conn, $day, $h_start,$h_end,$subject_id,$teacher_id,$class_name,$classroom_num)
-- update_courses($conn,$id, $day,$h_start,$h_end,$subject_id,$teacher_id,$class_name,$classroom_num)
+- select_courses_week_class($conn,$num_class,$d_start,$d_end) -> tableau des courses d'une classe entre deux dates données
+- select_courses_week_teacher($conn,$id_teacher,$d_start,$d_end) -> tableau des courses d'un prof entre deux dates données
+- insert_courses($conn, $day, $date, $recurrent,$h_start,$h_end,$subject_id,$teacher_id,$class_name,$classroom_num)
+- update_courses($conn,$id, $day,$date,$recurrent,$h_start,$h_end,$subject_id,$teacher_id,$class_name,$classroom_num)
 - delete_courses($conn, $id)
 
-Contrainte :
+Constrainte :
 
 - select_constraint($conn,$id) :
     Array ( [id] => 1 
@@ -149,7 +153,7 @@ function insert_classroom($conn, $num, $specificity){
 // Sélectionne un cours
 function select_courses($conn,$id){
     // récupère le cours
-    $res_courses=mysqli_query($conn,"SELECT id,`day`,h_start,h_end,class_name FROM courses WHERE id=$id");
+    $res_courses=mysqli_query($conn,"SELECT id,`day`,`date`,recurrent,h_start,h_end,class_name FROM courses WHERE id=$id");
     $courses=mysqli_fetch_assoc($res_courses);
     // récupère subject
     $subject=select_subject_courses($conn,$id);
@@ -187,7 +191,7 @@ function select_classroom_courses($conn,$id){
 
 // Selectionne tous les courses
 function selectAll_courses($conn){
-    $sql="SELECT id,`day`,h_start,h_end,class_name FROM courses";
+    $sql="SELECT id,`day`,`date`,recurrent,h_start,h_end,class_name FROM courses";
     $res=mysqli_query($conn,$sql);
 
     $courses=[] ; 
@@ -208,16 +212,86 @@ function selectAll_courses($conn){
 	return $courses;
 }
 
+// récupère les cours de la semain d'une classe
+function select_courses_week_class($conn,$num_class,$d_start,$d_end){
+    // on vérifie que d_start et d_end sont dans le bon format et on change si besoin
+    if(!($d_start instanceof DateTime)) {
+        $d_start = new DateTime($d_start);
+    }
+    if(!($d_end instanceof DateTime)) {
+        $d_end = new DateTime($d_end);
+    }
+
+    $sql="SELECT id,`day`,`date`,recurrent,h_start,h_end,class_name FROM courses";
+    $res=mysqli_query($conn,$sql);
+
+    $courses=[] ; 
+	while($cours=mysqli_fetch_assoc($res)){
+        $id_cours=$cours['id']; // On récupère l'id du cours courant
+        // On récupère le subject
+        $subject=select_subject_courses($conn,$id_cours); 
+        $cours["subject"]=$subject; 
+		// On récupère le teacher
+        $teacher=select_teacher_courses($conn,$id_cours);
+        $cours['teacher']=$teacher;
+        // On récupère la salle
+        $classroom=select_classroom_courses($conn,$id_cours);
+        $cours['classroom']=$classroom;
+
+
+        // on vérifie que le num de la classe et la date correspondent aux paramètres (si le cours est récurrent, on ne regarde pas la date)
+        if($cours['class_name']==$num_class && ($cours['recurrent']==1 || (new DateTime($cours['date'])<=$d_end && new DateTime($cours['date'])>=$d_start))){
+            $courses[]=$cours ; // On range le teacher courant dans le tableau
+        }
+	}
+	return $courses;
+}
+
+// récupère les cours de la semain d'un prof
+function select_courses_week_teacher($conn,$id_teacher,$d_start,$d_end){
+    // on vérifie que d_start et d_end sont dans le bon format et on change si besoin
+    if(!($d_start instanceof DateTime)) {
+        $d_start = new DateTime($d_start);
+    }
+    if(!($d_end instanceof DateTime)) {
+        $d_end = new DateTime($d_end);
+    }
+
+    $sql="SELECT id,`day`,`date`,recurrent,h_start,h_end,class_name FROM courses";
+    $res=mysqli_query($conn,$sql);
+
+    $courses=[] ; 
+	while($cours=mysqli_fetch_assoc($res)){
+        $id_cours=$cours['id']; // On récupère l'id du cours courant
+        // On récupère le subject
+        $subject=select_subject_courses($conn,$id_cours); 
+        $cours["subject"]=$subject; 
+		// On récupère le teacher
+        $teacher=select_teacher_courses($conn,$id_cours);
+        $cours['teacher']=$teacher;
+        // On récupère la salle
+        $classroom=select_classroom_courses($conn,$id_cours);
+        $cours['classroom']=$classroom;
+
+
+        // on vérifie que l'id_teacher et la date correspondent aux paramètres (si le cours est récurrent, on ne regarde pas la date)
+        if($cours['teacher']['id']==$id_teacher && ($cours['recurrent']==1 || (new DateTime($cours['date'])<=$d_end && new DateTime($cours['date'])>=$d_start))){
+            $courses[]=$cours ; // On range le teacher courant dans le tableau
+        }
+	}
+	return $courses;
+}
+
 // Crée un cours
-function insert_courses($conn, $day, $h_start,$h_end,$subject_id,$teacher_id,$class_name,$classroom_num){
-	$sql="INSERT INTO courses(`day`,h_start,h_end,subject_id,teacher_id,class_name,classroom_num) value('$day','$h_start','$h_end',$subject_id,$teacher_id,'$class_name',$classroom_num)";
+function insert_courses($conn, $day, $date, $recurrent,$h_start,$h_end,$subject_id,$teacher_id,$class_name,$classroom_num){
+	$sql="INSERT INTO courses(`day`,`date`,recurrent,h_start,h_end,subject_id,teacher_id,class_name,classroom_num) value('$day','$date',$recurrent,'$h_start','$h_end',$subject_id,$teacher_id,'$class_name',$classroom_num)";
 	$res=mysqli_query($conn,$sql);
     return $res;
 }
 
 // Modifie un cours
-function update_courses($conn,$id, $day,$h_start,$h_end,$subject_id,$teacher_id,$class_name,$classroom_num){
-    $sql="UPDATE `courses` SET `day`='$day',`h_start`='$h_start',`h_end`='$h_end',subject_id=$subject_id,teacher_id=$teacher_id,class_name='$class_name',classroom_num=$classroom_num WHERE id=$id";
+function update_courses($conn,$id, $day,$date,$recurrent,$h_start,$h_end,$subject_id,$teacher_id,$class_name,$classroom_num){
+    $sql="UPDATE `courses` SET `day`='$day',`date`='$date',recurrent=$recurrent,`h_start`='$h_start',`h_end`='$h_end',subject_id=$subject_id,teacher_id=$teacher_id,class_name='$class_name',classroom_num=$classroom_num WHERE id=$id";
     $res=mysqli_query($conn,$sql);
     return $res;
 }
