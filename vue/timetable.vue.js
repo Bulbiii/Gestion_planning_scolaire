@@ -73,7 +73,7 @@ function add_courses(schedule){
 
             cell.innerHTML = schedule[day][hour]; // course's name
 
-            cell.classList.add("courseCell"); // allowing to erase cell when updating tt
+            cell.classList.add("courseCell"); // allowing to erase cells when updating tt
         }
     }
 }

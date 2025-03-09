@@ -2,8 +2,19 @@ function create_note_view(){
     let container = document.querySelector("body");
     container.innerHTML = "";
 
+    // Create inputs
     let inputSection = create_element("section", container, "noteInputSection");
+    init_input_section(inputSection);
 
+
+    // Contain created notes
+    let listSection = create_element("section", container, "noteListSection");
+
+    create_note_list(listSection);
+}
+
+
+function init_input_section(inputSection){
     // Unavailability selectors
     create_unav_container(inputSection);
 
@@ -13,14 +24,9 @@ function create_note_view(){
     // Description
     create_desc_container(inputSection);
 
-
-    // Contain created notes
-    let listSection = create_element("section", container, "noteListSection");
-
-    create_note_list(listSection);    
+    // Add/Update button
+    add_update_note_button(inputSection);
 }
-
-
 
 
 function create_unav_container(container){
@@ -98,7 +104,116 @@ function create_desc_container(container){
 }
 
 
+function add_update_note_button(container, type="add"){
+    let button = create_element("button", container, type + "NoteButton", "Ajouter");
+    button.onclick = add_note;
+}
 
-function create_note_list(listSection){
+
+function add_note(){
+    let desc = document.querySelector("#noteDescInput").value;
+
+    console.log(desc);
+}
+
+
+function create_note_list(container){
+    // note's table (contain a list of notes made by the teacher)
+    let noteTable = create_element("table", container, "noteTable");
+
+    // create table's headers
+    create_note_header(noteTable);
+
+    // add table's content
+    add_note_table_content(noteTable);
+}
+
+
+function create_note_header(container){
+    let row = create_element("tr", container, "noteListHeader");
+
+    let headers = ["Numéro", "Date de début", "Heure de début", "Date de fin", "Heure de fin", "Modifier", "Supprimer"];
+    headers.forEach(header_title => {
+        create_element("th", row, header_title + "HeaderNote", header_title);
+    });
+}
+
+
+function add_note_table_content(container){
+    let notes = get_notes();
+
+    notes.forEach(noteInfo => {
+        let row = create_element("tr", container, "");
+        row.classList.add("noteRow");
+
+        add_note_row_content(row, noteInfo);
+    });
+}
+
+
+function add_note_row_content(container, infos){
+    for (let info_type in infos) {
+        let cell = create_element("td", container, "", infos[info_type]);
+        cell.classList.add(info_type + "CellNote");
+    }
+
+
+
+    add_note_list_action(container);
+}
+
+function add_note_list_action(container){
+    let modifyCell = create_element("td", container, "");
+    modifyCell.classList.add("modifyNote");
     
+    let modifyButton = create_element("button", modifyCell, "", "M");
+    modifyButton.onclick = modify_note;
+
+
+    let deleteCell = create_element("td", container, "");
+    deleteCell.classList.add("deleteNote");
+
+    let deleteButton = create_element("button", deleteCell, "", "D");
+    deleteButton.onclick = delete_note;
+}
+
+
+function modify_note(){
+    // retrieve and clear input section
+    let inputSection = document.querySelector("#noteInputSection");
+    inputSection.innerHTML = "" // clear input section
+
+    init_input_section(inputSection);
+
+    update_input_note_fields(this);
+}
+
+
+function update_input_note_fields(modifyButton){
+    let infoLine = modifyButton.parentElement.parentElement;
+    let infos = infoLine.children;
+
+
+
+    for (let i = 0; i < infos.length; i++) {
+        let info = infos[i];
+
+        // info cannot have a child
+        if (info.children.length == 0){
+            // get item's class and remove "CellNote"
+            let info_type = info.classList[0].split("CellNote")[0];
+        }
+            
+    }
+}
+
+
+
+function delete_note(){
+
+}
+
+
+function get_notes(){
+    return [{"phoneNumber" : "01 02 03 04 05", "startDate" : "01-02-24", "startTime" : "8h", "endDate" : "01-02-24", "endTime" : "10h"}, {"phoneNumber" : "01 02 03 04 05", "startDate" : "01-02-24", "startTime" : "10h", "endDate" : "01-02-24", "endTime" : "12h"}];
 }
