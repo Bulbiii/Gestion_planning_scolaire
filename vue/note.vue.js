@@ -1,10 +1,10 @@
-function create_note_view(){
+function create_note_view(note_obj=empty_note_obj){
     let container = document.querySelector("body");
     container.innerHTML = "";
 
     // Create inputs
     let inputSection = create_element("section", container, "noteInputSection");
-    init_input_section(inputSection);
+    init_input_section(inputSection, note_obj);
 
 
     // Contain created notes
@@ -14,9 +14,9 @@ function create_note_view(){
 }
 
 
-function init_input_section(inputSection){
+function init_input_section(inputSection, note_obj){
     // Unavailability selectors
-    create_unav_container(inputSection);
+    create_unav_container(inputSection, note_obj);
 
     // recurring absence
     create_rec_container(inputSection);
@@ -29,7 +29,7 @@ function init_input_section(inputSection){
 }
 
 
-function create_unav_container(container){
+function create_unav_container(container, note_obj){
     // Unavailability container
     let unavContainer = create_element("div", container, "noteUnavContainer");
 
@@ -41,6 +41,7 @@ function create_unav_container(container){
     let unavStartDate = create_element("input", unavContainer, "noteUnavInputStartDate");
     unavStartDate.name = "dateTimeUnav";
     unavStartDate.type = "date";
+    unavStartDate.value = note_obj["startDate"];
 
     // start time
     let unavStartTime = create_element("input", unavContainer, "noteUnavInputStartTime");
@@ -143,7 +144,7 @@ function add_note_table_content(container){
     let notes = get_notes();
 
     notes.forEach(noteInfo => {
-        let row = create_element("tr", container, "");
+        let row = create_element("tr", container, "rowNote" + noteInfo["id"]);
         row.classList.add("noteRow");
 
         add_note_row_content(row, noteInfo);
@@ -153,11 +154,11 @@ function add_note_table_content(container){
 
 function add_note_row_content(container, infos){
     for (let info_type in infos) {
-        let cell = create_element("td", container, "", infos[info_type]);
-        cell.classList.add(info_type + "CellNote");
+        if (info_type != "id") {
+            let cell = create_element("td", container, "", infos[info_type]);
+            cell.classList.add(info_type + "CellNote");
+        }
     }
-
-
 
     add_note_list_action(container);
 }
@@ -177,34 +178,25 @@ function add_note_list_action(container){
     deleteButton.onclick = delete_note;
 }
 
-
 function modify_note(){
-    // retrieve and clear input section
-    let inputSection = document.querySelector("#noteInputSection");
-    inputSection.innerHTML = "" // clear input section
+    let infoLine = this.parentElement.parentElement;
+    let infoId = infoLine.id.split("rowNote")[1];
 
-    init_input_section(inputSection);
+    let info;
 
-    update_input_note_fields(this);
-}
-
-
-function update_input_note_fields(modifyButton){
-    let infoLine = modifyButton.parentElement.parentElement;
-    let infos = infoLine.children;
-
-
-
-    for (let i = 0; i < infos.length; i++) {
-        let info = infos[i];
-
-        // info cannot have a child
-        if (info.children.length == 0){
-            // get item's class and remove "CellNote"
-            let info_type = info.classList[0].split("CellNote")[0];
+    axios.get("/json/json.php", {
+        params : {
+            table : "courses",
+            type : "byId",
+            id : infoId
         }
-            
-    }
+    }).then(res => {
+        if (! res){
+            console.log("Erreur lors de l'importation des données");
+        } else {
+            console.log(res.data);
+        }
+    });
 }
 
 
@@ -215,5 +207,6 @@ function delete_note(){
 
 
 function get_notes(){
-    return [{"phoneNumber" : "01 02 03 04 05", "startDate" : "01-02-24", "startTime" : "8h", "endDate" : "01-02-24", "endTime" : "10h"}, {"phoneNumber" : "01 02 03 04 05", "startDate" : "01-02-24", "startTime" : "10h", "endDate" : "01-02-24", "endTime" : "12h"}];
+    return [{"id" : 1, "phoneNumber" : "01 02 03 04 05", "startDate" : "01-02-24", "startTime" : "08:00", "endDate" : "01-02-24", "endTime" : "10:00"},
+         {"id" : 2, "phoneNumber" : "01 02 03 04 05", "startDate" : "01-02-24", "startTime" : "10:00", "endDate" : "01-02-24", "endTime" : "12:00"}];
 }

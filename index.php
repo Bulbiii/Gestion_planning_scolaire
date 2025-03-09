@@ -18,6 +18,8 @@ if(!isset($_SESSION['role'])){
 <script src="lib/vars.lib.js"></script>
 <script src="vue/lib.vue.js"></script> 
 
+<script src="lib/axios.min.js"></script>
+
 <script src="vue/main.vue.js"></script>
 <script src="vue/header.vue.js"></script>
 <script src="vue/footer.vue.js"></script>
