@@ -1,23 +1,23 @@
 function create_main_vue(){
-    // let body = document.querySelector("body");
+    let body = document.querySelector("body");
     
-    // create_header(body);
+    create_header(body);
 
-    // let main = create_element("main", body, "");
+    let main = create_element("main", body, "");
 
-    // create_tt(main, schedule);
+    create_tt(main, schedule);
 
-    // let user_type = "prof";
+    let user_type = "prof";
 
-    // if (user_type == "prof"){
-    //     create_teacher_icons(main);      
-    // } else if (user_type == "admin"){
-    //     create_admin_icons(main);
-    // }
+    if (user_type == "prof"){
+        create_teacher_icons(main);      
+    } else if (user_type == "admin"){
+        create_admin_icons(main);
+    }
 
-    // create_footer(body);
+    create_footer(body);
 
-    create_note_view();
+    // create_note_view();
 }
 
 
