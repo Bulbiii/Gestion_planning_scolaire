@@ -42,21 +42,25 @@ function create_unav_container(container, note_obj){
     unavStartDate.name = "dateTimeUnav";
     unavStartDate.type = "date";
     unavStartDate.value = note_obj["startDate"];
+    
 
     // start time
     let unavStartTime = create_element("input", unavContainer, "noteUnavInputStartTime");
     unavStartTime.name = "dateTimeUnav";
     unavStartTime.type = "time"
+    unavStartTime.value = note_obj["startTime"];
 
     // end date
     let unavEndDate = create_element("input", unavContainer, "noteUnavInputEndDate");
     unavEndDate.name = "dateTimeUnav";
     unavEndDate.type = "date";
+    unavEndDate.value = note_obj["endDate"];
 
     // end time
     let unavEndTime = create_element("input", unavContainer, "noteUnavInputEndTime");
     unavEndTime.name = "dateTimeUnav";
     unavEndTime.type = "time"
+    unavEndTime.value = note_obj["endTime"];
 }
 
 
@@ -113,8 +117,6 @@ function add_update_note_button(container, type="add"){
 
 function add_note(){
     let desc = document.querySelector("#noteDescInput").value;
-
-    console.log(desc);
 }
 
 
@@ -182,19 +184,19 @@ function modify_note(){
     let infoLine = this.parentElement.parentElement;
     let infoId = infoLine.id.split("rowNote")[1];
 
-    let info;
-
-    axios.get("/json/json.php", {
+    axios.get("/info3/json/json.php", {
         params : {
-            table : "courses",
+            table : "constraint",
             type : "byId",
             id : infoId
         }
     }).then(res => {
-        if (! res){
+        if (res == "Erreur"){
             console.log("Erreur lors de l'importation des données");
         } else {
-            console.log(res.data);
+            let info = {id : res.data["id"], startDate : res.data["date"], endDate : res.data["date"], startTime : res.data["h_start"], endTime : res.data["h_end"], desc : res.data["description"]};
+            
+            create_note_view(info);
         }
     });
 }
