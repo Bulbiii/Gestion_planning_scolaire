@@ -28,9 +28,9 @@ if(isset($_POST['mail']) && isset($_POST['passwd'])){
         }
 
 
-        $_SESSION["role"]=$role;
-        $_SESSION["user"]=$user;
-		$_SESSION['id']=$user['id'];
+        $_SESSION["role"]=$role; // teacher / student / admin
+        $_SESSION["user"]=$user; // toutes les infos de la personne connectée
+		$_SESSION['id']=$user['id']; // l'id de la personne
 
         // redirection
         header("Location: index.php");
