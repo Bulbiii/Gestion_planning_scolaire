@@ -1,4 +1,5 @@
-function create_note_view(note_obj=empty_note_obj, action="add"){
+// '_' allows to skip the button's event
+function create_note_view(_, note_obj=empty_note_obj, action="add"){
     let container = document.querySelector("body");
     container.innerHTML = "";
 
@@ -167,8 +168,6 @@ async function create_note_list(container){
     create_note_header(noteTable);
 
     get_notes().then(notes => {
-        console.log(notes);
-
         // add table's content
         add_note_table_content(noteTable, notes);
     });
@@ -177,7 +176,7 @@ async function create_note_list(container){
 function create_note_header(container){
     let row = create_element("tr", container, "noteListHeader");
 
-    let headers = ["Numéro", "Date de début", "Heure de début", "Date de fin", "Heure de fin", "Modifier", "Supprimer"];
+    let headers = ["Date de début", "Date de fin", "Heure de début", "Heure de fin", "Modifier", "Supprimer"];
     headers.forEach(header_title => {
         create_element("th", row, header_title + "HeaderNote", header_title);
     });
@@ -236,7 +235,7 @@ function modify_note(){
         } else {
             let info = {id : res.data["id"], startDate : res.data["date"], endDate : res.data["date"], startTime : res.data["h_start"], endTime : res.data["h_end"], desc : res.data["description"]};
             
-            create_note_view(info);
+            create_note_view(_, info);
         }
     });
 }
@@ -262,10 +261,6 @@ async function get_notes(){
         } else {
             notes = note_rs_to_info(response.data);
         }
-
-        console.log(notes);
-        
-
         return notes;
     })
 
