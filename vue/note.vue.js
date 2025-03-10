@@ -1,10 +1,10 @@
-function create_note_view(note_obj=empty_note_obj){
+function create_note_view(note_obj=empty_note_obj, action="add"){
     let container = document.querySelector("body");
     container.innerHTML = "";
 
     // Create inputs
     let inputSection = create_element("section", container, "noteInputSection");
-    init_input_section(inputSection, note_obj);
+    init_input_section(inputSection, note_obj, action);
 
 
     // Contain created notes
@@ -14,7 +14,7 @@ function create_note_view(note_obj=empty_note_obj){
 }
 
 
-function init_input_section(inputSection, note_obj){
+function init_input_section(inputSection, note_obj, action){
     // Unavailability selectors
     create_unav_container(inputSection, note_obj);
 
@@ -22,10 +22,10 @@ function init_input_section(inputSection, note_obj){
     create_rec_container(inputSection);
 
     // Description
-    create_desc_container(inputSection);
+    create_desc_container(inputSection, note_obj);
 
     // Add/Update button
-    add_update_note_button(inputSection);
+    add_update_note_button(inputSection, action);
 }
 
 
@@ -95,7 +95,7 @@ function create_rec_container(container){
 
 
 
-function create_desc_container(container){
+function create_desc_container(container, note_obj){
     // Description container
     let descContainer = create_element("div", container, "noteDescContainer");
 
@@ -106,31 +106,73 @@ function create_desc_container(container){
     // description's entry
     let descInput = create_element("input", descContainer, "noteDescInput");
     descInput.name = "descInput";
+    descInput.value = note_obj["desc"];
 }
 
 
-function add_update_note_button(container, type="add"){
-    let button = create_element("button", container, type + "NoteButton", "Ajouter");
-    button.onclick = add_note;
+function add_update_note_button(container, action){
+    let button = create_element("button", container, "actionNoteButton");
+    
+    if (action == "add"){
+        button.innerHTML = "Ajouter";
+        button.onclick = add_note;
+    } else {
+        button.innerHTML = "Modifier";
+        button.onclick = update_note;
+    }
+
+}
+
+function get_form_data(){
+    let startDate = document.querySelector("#noteUnavInputStartDate").value;
+    let endDate = document.querySelector("#noteUnavInputEndDate").value;
+    let startTime = document.querySelector("#noteUnavInputStartTime").value;
+    let endTime = document.querySelector("#noteUnavInputEndTime").value;
+    let desc = document.querySelector("#noteDescInput").value;
+
+    return {startDate : startDate, endDate : endDate, startTime : startTime, endTime : endTime, desc : desc};
 }
 
 
 function add_note(){
-    let desc = document.querySelector("#noteDescInput").value;
+    // let fieldsData = get_form_data();
+
+    // axios.get("/info3/json/json.php", {
+    //     params : {
+    //         table : "constraint",
+    //         type : "",
+    //         date_start : fieldsData.startDate,
+    //         date_end : fieldsData.endDate,
+    //         h_start : fieldsData.startTime,
+    //         h_end : fieldsData.endTime,
+    //         description : fieldsData.desc
+    //     }
+    // }).then(res => {
+    //     if (res == "Erreur"){
+    //         console.log("Erreur lors de la sauvegarde de la contrainte");
+    //     }
+    // });
 }
 
 
-function create_note_list(container){
+function update_note(){
+    
+}
+
+async function create_note_list(container){
     // note's table (contain a list of notes made by the teacher)
     let noteTable = create_element("table", container, "noteTable");
 
     // create table's headers
     create_note_header(noteTable);
 
-    // add table's content
-    add_note_table_content(noteTable);
-}
+    get_notes().then(notes => {
+        console.log(notes);
 
+        // add table's content
+        add_note_table_content(noteTable, notes);
+    });
+}
 
 function create_note_header(container){
     let row = create_element("tr", container, "noteListHeader");
@@ -142,13 +184,11 @@ function create_note_header(container){
 }
 
 
-function add_note_table_content(container){
-    let notes = get_notes();
-
+async function add_note_table_content(container, notes){
     notes.forEach(noteInfo => {
         let row = create_element("tr", container, "rowNote" + noteInfo["id"]);
         row.classList.add("noteRow");
-
+        
         add_note_row_content(row, noteInfo);
     });
 }
@@ -207,8 +247,47 @@ function delete_note(){
 
 }
 
+async function get_notes(){
+    return await axios.get("/info3/json/json.php", {
+        params : {
+            table : "constraint",
+            type : "all",
+        }
+    }).then(response => {
+        let notes;
+        
+        if (response == "erreur"){
+            console.log("Erreur lors de l'importation des contraintes.");
+            notes = empty_note_obj;
+        } else {
+            notes = note_rs_to_info(response.data);
+        }
 
-function get_notes(){
-    return [{"id" : 1, "phoneNumber" : "01 02 03 04 05", "startDate" : "01-02-24", "startTime" : "08:00", "endDate" : "01-02-24", "endTime" : "10:00"},
-         {"id" : 2, "phoneNumber" : "01 02 03 04 05", "startDate" : "01-02-24", "startTime" : "10:00", "endDate" : "01-02-24", "endTime" : "12:00"}];
+        console.log(notes);
+        
+
+        return notes;
+    })
+
+    // return [{"id" : 1, "phoneNumber" : "01 02 03 04 05", "startDate" : "01-02-24", "startTime" : "08:00", "endDate" : "01-02-24", "endTime" : "10:00"},
+    //      {"id" : 2, "phoneNumber" : "01 02 03 04 05", "startDate" : "01-02-24", "startTime" : "10:00", "endDate" : "01-02-24", "endTime" : "12:00"}];
+}
+
+
+function note_rs_to_info(response){
+    let info_list = [];
+
+    response.forEach(obj => {
+        let info = {};
+
+        for (key in obj) {
+            if (key in dbKeywordsDict) {
+                info[dbKeywordsDict[key]] = obj[key];
+            }
+        }
+
+        info_list.push(info);
+    })
+
+    return info_list;
 }
