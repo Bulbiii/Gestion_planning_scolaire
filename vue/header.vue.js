@@ -3,7 +3,10 @@ function create_header(container){
 
     create_date_info_header(header);
 
+    create_week_info_header(header);
+
     create_user_info_header(header);
+
 }
 
 
@@ -20,8 +23,13 @@ function create_date_info_header(container){
     // end date
     create_element("p", dateInfoContainer, "endDateInfoHeader", "17/02/2024");
 
+    }
+
+function create_week_info_header(container){
+    // contain week's info
+    let weekInfoContainer = create_element("div", container, "weekInfoContainer");
     // week number
-    create_element("p", dateInfoContainer, "weekNumberInfoHeader", "Semaine 37");
+    create_element("p", weekInfoContainer, "weekInfoHeader", "Semaine 37");
 }
 
 
