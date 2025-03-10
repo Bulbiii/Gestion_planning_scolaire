@@ -3,6 +3,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
+
 include "../db/db_connect.php";
 include "../crud/crud.php";
 include "../crud/utilisateur.php";
@@ -38,6 +39,16 @@ if(isset($_GET['table']) && isset($_GET['type'])){
         }elseif($type=="byId" && isset($_GET['id'])){ //1 cours selon son id : byId + id
             $id=$_GET['id'];
             $donnees=select_courses($conn,$id);
+            $recupere=true;
+        }elseif($type=="week" && isset($_GET['id']) && isset($_GET['start'])  && isset($_GET['end']) ){ // Toues les cours entre d_start et d_end selon id (int-> teacher / string->class)
+            $id=$_GET['id'];                                                                                                    // week + choix + id + d_start + d_end
+            // on transforme id en int si c'est possible (pour les cours d'un teacher, sinon c'est d'une class)
+            if (filter_var($id, FILTER_VALIDATE_INT) !== false) {
+                $id = (int) $id;
+            }                                                                            
+            $d_start=$_GET['start'];
+            $d_end=$_GET['end'];
+            $donnees=select_courses_week($conn,$id,$d_start,$d_end);
             $recupere=true;
         }
     }
@@ -118,6 +129,13 @@ if(isset($_GET['table']) && isset($_GET['type'])){
             $recupere=true;
         }
     }
+    // récupère les id (teacher ou class) correspondant aux emplois du temps accessible par l'utilisateur
+    elseif($table=="edt" && isset($_GET['id']) && isset($_GET['type']) ){ // liste edt selon id et role (type) : id + type
+            $id=$_GET['id'];
+            $role=$_GET['type'];
+            $donnees=emplois_temps_accessible($conn,$id,$role);
+            $recupere=true;
+    }
 }
 
 
@@ -132,7 +150,7 @@ if($recupere){
     /* Ecrit les donnees au format JSON*/ 
     echo"${donnees_str}";
 }else{
-   $donnees_str = json_encode("erreur");
+   $donnees_str = json_encode("erreur");//("erreur");
    header('Content-Type: application/json; charset=utf-8');
    echo"${donnees_str}";
 } 

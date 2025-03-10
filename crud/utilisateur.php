@@ -84,7 +84,13 @@ Admin :
 - update_admin($conn,$id,$name,$surname,$mail,$password)
 - delete_admin($conn,$id)
 
+Autre :
 
+- emplois_temps_accessible($conn,$id,$role) -> renvoie un tableau constitué des id_teacher ou class_name correspondants aux edt accessibles par $id
+    Array ( [0] => 1 
+            [1] => 3C 
+            [2] => 4A )
+            
 
 */
 
@@ -420,3 +426,35 @@ function delete_admin($conn,$id){
 }
 
 
+// Autre
+
+function emplois_temps_accessible($conn,$id,$role){
+
+    $res=[];
+    // Pour le prof, on prend toutes ses classes et son id
+    if($role==="teacher"){
+        $teacher=select_teacher($conn,$id);
+        $res=[$id]; // id
+        foreach ($teacher["class"] as $class) { // class
+            array_push($res,$class["name"]);
+        }
+    }
+    // Pour l'étudiant, on ne prend que sa classe
+    elseif($role==="student") {
+        $student=select_student($conn,$id);
+        $res=[$student['class_name']];
+    }
+    // Pour l'admin, on prend toutes les classes et tous les profs
+    elseif($role==="admin") {
+        $teachers=selectAll_teacher($conn);
+        $classes=selectAll_class($conn);
+        foreach ($classes as $class) { // class
+            array_push($res,$class["name"]);
+        }
+        foreach ($teachers as $teacher) { // teacher
+            array_push($res,$teacher["id"]);
+        }
+    }
+
+    return $res;
+}

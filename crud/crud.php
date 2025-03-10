@@ -34,8 +34,7 @@ Courses :
             [classroom] => Array ( [num] => 1 
                                    [specificity] => math ) )
 - selectAll_courses($conn) -> tableau de courses
-- select_courses_week_class($conn,$num_class,$d_start,$d_end) -> tableau des courses d'une classe entre deux dates données
-- select_courses_week_teacher($conn,$id_teacher,$d_start,$d_end) -> tableau des courses d'un prof entre deux dates données
+- select_courses_week($conn,$id,$d_start,$d_end) -> tableau des courses d'une classe ou d'un prof entre deux dates données
 - insert_courses($conn, $day, $date, $recurrent,$h_start,$h_end,$subject_id,$teacher_id,$class_name,$classroom_num)
 - update_courses($conn,$id, $day,$date,$recurrent,$h_start,$h_end,$subject_id,$teacher_id,$class_name,$classroom_num)
 - delete_courses($conn, $id)
@@ -212,6 +211,17 @@ function selectAll_courses($conn){
 	return $courses;
 }
 
+// récupère les cours de la semaine d'une classse ou d'un prof
+function select_courses_week($conn,$id,$d_start,$d_end){
+    $res=[];
+    if(is_int($id)){ // si id est un entier, c'est un prof
+        $res=select_courses_week_teacher($conn,$id,$d_start,$d_end);
+    }elseif(is_string($id)){ // si id est un string, c'est une classe
+        $res=select_courses_week_class($conn,$id,$d_start,$d_end);
+    }
+    return $res;
+}
+
 // récupère les cours de la semain d'une classe
 function select_courses_week_class($conn,$num_class,$d_start,$d_end){
     // on vérifie que d_start et d_end sont dans le bon format et on change si besoin
@@ -260,7 +270,8 @@ function select_courses_week_teacher($conn,$id_teacher,$d_start,$d_end){
     $sql="SELECT id,`day`,`date`,recurrent,h_start,h_end,class_name FROM courses";
     $res=mysqli_query($conn,$sql);
 
-    $courses=[] ; 
+    $courses=[] ;
+    // On parcourt tous les cours
 	while($cours=mysqli_fetch_assoc($res)){
         $id_cours=$cours['id']; // On récupère l'id du cours courant
         // On récupère le subject
@@ -275,7 +286,7 @@ function select_courses_week_teacher($conn,$id_teacher,$d_start,$d_end){
 
 
         // on vérifie que l'id_teacher et la date correspondent aux paramètres (si le cours est récurrent, on ne regarde pas la date)
-        if($cours['teacher']['id']==$id_teacher && ($cours['recurrent']==1 || (new DateTime($cours['date'])<=$d_end && new DateTime($cours['date'])>=$d_start))){
+        if($cours['teacher']['id']==$id_teacher && ($cours['recurrent']==1 || ( new DateTime($cours['date'])>=$d_start && new DateTime($cours['date'])<=$d_end ) ) ){
             $courses[]=$cours ; // On range le teacher courant dans le tableau
         }
 	}
