@@ -1,6 +1,7 @@
 function create_main_vue(){
     let body = document.querySelector("body");
-    
+    body.innerHTML = "";
+
     create_header(body);
 
     let main = create_element("main", body, "");
@@ -16,8 +17,6 @@ function create_main_vue(){
     }
 
     create_footer(body);
-
-    // create_note_view();
 }
 
 

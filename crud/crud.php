@@ -360,6 +360,7 @@ function insert_constraint($conn,$day,$date_start, $date_end,$h_start,$h_end,$de
 // Modifie une contrainte
 function update_constraint($conn,$id,$day,$date_start, $date_end,$h_start,$h_end,$description,$recurrent){
     $sql="UPDATE `constraint` SET `description`='$description',`day`='$day',`date_start`='$date_start', `date_end`='$date_end',h_start='$h_start',h_end='$h_end', recurrent=$recurrent WHERE id=$id";
+    echo "$sql";
     $res=mysqli_query($conn,$sql);
     return $res;
 }

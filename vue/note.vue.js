@@ -3,6 +3,8 @@ function create_note_view(_, note_obj=empty_note_obj, action="add"){
     let container = document.querySelector("body");
     container.innerHTML = "";
 
+    home_button(container);
+
     // Create inputs
     let inputSection = create_element("section", container, "noteInputSection");
     init_input_section(inputSection, note_obj, action);
@@ -12,6 +14,13 @@ function create_note_view(_, note_obj=empty_note_obj, action="add"){
     let listSection = create_element("section", container, "noteListSection");
 
     create_note_list(listSection);
+}
+
+function home_button(container){
+    let header = create_element("header", container, "noteHeader");
+
+    let homeButton = create_element("button", header, "homeButtonNote", "Accueil");
+    homeButton.onclick = create_main_vue;
 }
 
 
@@ -26,7 +35,7 @@ function init_input_section(inputSection, note_obj, action){
     create_desc_container(inputSection, note_obj);
 
     // Add/Update button
-    add_update_note_button(inputSection, action);
+    add_update_note_button(inputSection, action, note_obj);
 }
 
 
@@ -111,7 +120,7 @@ function create_desc_container(container, note_obj){
 }
 
 
-function add_update_note_button(container, action){
+function add_update_note_button(container, action, note_obj){
     let button = create_element("button", container, "actionNoteButton");
     
     if (action == "add"){
@@ -120,6 +129,7 @@ function add_update_note_button(container, action){
     } else {
         button.innerHTML = "Modifier";
         button.onclick = update_note;
+        button.value = note_obj.id;
     }
 
 }
@@ -136,28 +146,55 @@ function get_form_data(){
 
 
 function add_note(){
-    // let fieldsData = get_form_data();
+    let fieldsData = get_form_data();
 
-    // axios.get("/info3/json/json.php", {
-    //     params : {
-    //         table : "constraint",
-    //         type : "",
-    //         date_start : fieldsData.startDate,
-    //         date_end : fieldsData.endDate,
-    //         h_start : fieldsData.startTime,
-    //         h_end : fieldsData.endTime,
-    //         description : fieldsData.desc
-    //     }
-    // }).then(res => {
-    //     if (res == "Erreur"){
-    //         console.log("Erreur lors de la sauvegarde de la contrainte");
-    //     }
-    // });
+    axios.get("/info3/json/json.php", {
+        params : {
+            table : "constraint",
+            type : "insert",
+            day : "...",
+            date_start : fieldsData.startDate,
+            date_end : fieldsData.endDate,
+            h_start : fieldsData.startTime,
+            h_end : fieldsData.endTime,
+            desc : fieldsData.desc,
+            recurrent : false,
+            id_teacher : 1
+        }
+    }).then(res => {
+        if (res.data == "erreur"){
+            console.log("Erreur lors de la sauvegarde de la contrainte");
+        } else {
+            create_note_view(null);
+        }
+    });
 }
 
 
 function update_note(){
-    
+    let fieldsData = get_form_data();
+
+    axios.get("/info3/json/json.php", {
+        params : {
+            table : "constraint",
+            type : "update",
+            id : this.value,
+            day : "...",
+            date_start : fieldsData.startDate,
+            date_end : fieldsData.endDate,
+            h_start : fieldsData.startTime,
+            h_end : fieldsData.endTime,
+            desc : fieldsData.desc,
+            recurrent : false,
+            id_teacher : 1
+        }
+    }).then(res => {
+        if (res.data == "erreur"){
+            console.log("Erreur lors de la sauvegarde de la contrainte");
+        } else {
+            create_note_view(null);
+        }
+    });
 }
 
 async function create_note_list(container){
@@ -230,12 +267,12 @@ function modify_note(){
             id : infoId
         }
     }).then(res => {
-        if (res == "Erreur"){
+        if (res.data == "Erreur"){
             console.log("Erreur lors de l'importation des données");
         } else {
-            let info = {id : res.data["id"], startDate : res.data["date"], endDate : res.data["date"], startTime : res.data["h_start"], endTime : res.data["h_end"], desc : res.data["description"]};
+            let info = {id : res.data["id"], startDate : res.data["date_start"], endDate : res.data["date_end"], startTime : res.data["h_start"], endTime : res.data["h_end"], desc : res.data["description"]};
             
-            create_note_view(_, info);
+            create_note_view(null, info, "update");
         }
     });
 }
@@ -243,7 +280,22 @@ function modify_note(){
 
 
 function delete_note(){
+    let infoLine = this.parentElement.parentElement;
+    let id = infoLine.id.split("rowNote")[1];
 
+    axios.get("/info3/json/json.php", {
+        params : {
+            table : "constraint",
+            type : "delete",
+            id : id
+        }
+    }).then(res => {
+        if (res.data == "erreur"){
+            console.log("Erreur lors de l'importation des données");
+        } else {
+            create_note_view(null);   
+        }
+    });
 }
 
 async function get_notes(){
@@ -255,7 +307,7 @@ async function get_notes(){
     }).then(response => {
         let notes;
         
-        if (response == "erreur"){
+        if (response.data == "erreur"){
             console.log("Erreur lors de l'importation des contraintes.");
             notes = empty_note_obj;
         } else {

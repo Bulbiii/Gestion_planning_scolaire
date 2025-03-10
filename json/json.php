@@ -65,6 +65,47 @@ if(isset($_GET['table']) && isset($_GET['type'])){
             $id_teacher=$_GET['id'];
             $donnees=selectAll_teacher_constraint($conn,$id_teacher);
             $recupere=true;
+        }elseif($type=="insert" && isset($_GET['day'], $_GET['date_start'], $_GET['date_end'], $_GET['h_start'], $_GET['h_end'], $_GET['desc'], $_GET['recurrent'], $_GET['id_teacher'])){
+            $day=$_GET['day'];
+            $date_start=$_GET['date_start'];
+            $date_end=$_GET['date_end'];
+            $h_start=$_GET['h_start'];
+            $h_end=$_GET['h_end'];
+            $desc=$_GET['desc'];
+
+            $recurrent;
+            if ($_GET['recurrent'] == "true"){
+                $recurrent=1;
+            } else {
+                $recurrent=0;
+            }
+            
+            $id_teacher=$_GET['id_teacher'];
+            $donnees=insert_constraint($conn,$day,$date_start, $date_end,$h_start,$h_end,$desc,$recurrent, $id_teacher);
+            $recupere=$donnees;
+        }elseif($type=="update" && isset($_GET['id'], $_GET['day'], $_GET['date_start'], $_GET['date_end'], $_GET['h_start'], $_GET['h_end'], $_GET['desc'], $_GET['recurrent'], $_GET['id_teacher'])){
+            $id=$_GET['id'];
+            $day=$_GET['day'];
+            $date_start=$_GET['date_start'];
+            $date_end=$_GET['date_end'];
+            $h_start=$_GET['h_start'];
+            $h_end=$_GET['h_end'];
+            $desc=$_GET['desc'];
+
+            $recurrent;
+            if ($_GET['recurrent'] == "true"){
+                $recurrent=1;
+            } else {
+                $recurrent=0;
+            }
+            
+            $id_teacher=$_GET['id_teacher'];
+            $donnees=update_constraint($conn,$id,$day,$date_start, $date_end,$h_start,$h_end,$desc,$recurrent, $id_teacher);
+            $recupere=$donnees;
+        }elseif($type="delete" && isset($_GET['id'])){
+            $id=$_GET['id'];
+            $donnees=delete_constraint($conn,$id);
+            $recupere=$donnees;
         }
     }
     // récupère les subject
