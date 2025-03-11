@@ -241,6 +241,7 @@ switch ($method) {
                         $new_name=$input['new_name'];
                         $modif = update_class($conn,$old_name,$new_name);
                     }
+                    break;
             }
         }
         break;
@@ -249,7 +250,7 @@ switch ($method) {
         $input = json_decode(file_get_contents('php://input'), true);
     
         if (isset($input['type'])) {
-            $type = $input['type'];  // Type : classroom / courses / subject / class
+            $type = $input['type'];  // Type : classroom / courses / subject / class / class_teacher / teacher_subject
     
             // insert en fonction du type
             switch ($type) {
@@ -292,6 +293,22 @@ switch ($method) {
                         $modif = insert_class($conn,$name);
                     }
                     break;
+                // POST CLASS_TEACHER
+                case 'class_teacher':
+                    if(isset($input['teacher_id']) && isset($input['class_name'])){
+                        $teacher_id = $input['teacher_id'];
+                        $class_name = $input['class_name'];
+                        $modif = insert_class_teacher($conn,$teacher_id,$class_name);
+                    }
+                    break;
+                // POST TEACHER_SUBJECT
+                case 'teacher_subject':
+                    if(isset($input['id_teacher']) && isset($input['id_subject'])){
+                        $id_teacher=$input['id_teacher'];
+                        $id_subject=$input['id_subject'];
+                        $modif = insert_teacher_subject($conn,$id_teacher,$id_subject);
+                    }
+                    break;
             }
         }
         break;
@@ -300,7 +317,7 @@ switch ($method) {
         $input = json_decode(file_get_contents('php://input'), true);
     
         if (isset($input['type'])) {
-            $type = $input['type'];  // Type : classroom / courses / subject / class
+            $type = $input['type'];  // Type : classroom / courses / subject / class / class_teacher / teacher_subject
     
             // Gérer la suppression en fonction du type
             switch ($type) {
@@ -330,6 +347,21 @@ switch ($method) {
                     if(isset($input['name'])){
                         $name=$input['name'];
                         $modif = delete_class($conn,$name);
+                    }
+                    break;
+                // DELETE CLASS_TEACHER
+                case 'class_teacher':
+                    if(isset($input['teacher_id']) && isset($input['class_name'])){
+                        $teacher_id = $input['teacher_id'];
+                        $class_name = $input['class_name'];
+                        $modif = delete_class_teacher($conn,$teacher_id,$class_name);
+                    }
+                // DELETE TEACHER_SUBJECT
+                case 'teacher_subject':
+                    if(isset($input['id_teacher']) && isset($input['id_subject'])){
+                        $id_teacher=$input['id_teacher'];
+                        $id_subject=$input['id_subject'];
+                        $modif = delete_teacher_subject($conn,$id_teacher,$id_subject);
                     }
                     break;
             }
