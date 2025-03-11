@@ -195,35 +195,52 @@ switch ($method) {
         $input = json_decode(file_get_contents('php://input'), true);
 
         if (isset($input['type'])) {
-            $type = $input['type'];  // Type : classroom / courses
+            $type = $input['type'];  // Type : classroom / courses / subject / class
 
             $modif=false;
             // maj en fonction du type
             switch ($type) {
-                case 'classroom': // Pour update_classroom
+                // PUT CLASSROOM
+                case 'classroom': 
                     if (isset($input['num']) && isset($input['specificity'])) {
                         $num = $input['num'];
                         $specificity = $input['specificity'];
                         $modif = update_classroom($conn, $num, $specificity);
                     }
                     break;
-
-                case 'courses': // Pour les courses
-                    if (isset($input['id']) && isset($input['day']) && isset($input['date'])  && isset($input['recurrent'])  && isset($input['h_start'])  && isset($input['h_end'])  && isset($input['subject']['id'])  && isset($input['teacher']['id'])  && isset($input['class_name'])  && isset($input['classroom']['num']) ) {
+                // PUT COURSES
+                case 'courses': 
+                    if (isset($input['id']) && isset($input['day']) && isset($input['date'])  && isset($input['recurrent'])  && isset($input['h_start'])  && isset($input['h_end'])  && isset($input['subject_id'])  && isset($input['teacher_id'])  && isset($input['class_name'])  && isset($input['classroom_num']) ) {
                         $id = $input['id'];
                         $day = $input['day'];
                         $date = $input['date'];
                         $recurrent = $input['recurrent'];
                         $h_start = $input['h_start'];
                         $h_end = $input['h_end'];
-                        $subject_id = $input['subject']['id'];
-                        $teacher_id = $input['teacher']['id'];
+                        $subject_id = $input['subject_id'];
+                        $teacher_id = $input['teacher_id'];
                         $class_name = $input['class_name'];
-                        $classroom_num = $input['classroom']['num'];
+                        $classroom_num = $input['classroom_num'];
                         $modif = update_courses($conn,$id, $day,$date,$recurrent,$h_start,$h_end,$subject_id,$teacher_id,$class_name,$classroom_num);
                     }
                     break;
-
+                // PUT SUBJECT
+                case 'subject' :
+                    if(isset($input['id']) && isset($input['name']) && isset($input['nb_hours']) && isset($input['specificity']) ){
+                        $id=$input['id'];
+                        $name=$input['name'];
+                        $nb_hours=$input['nb_hours'];
+                        $specificity=$input['specificity'];
+                        $modif = update_subject($conn,$id,$name,$nb_hours,$specificity);
+                    }
+                    break;
+                // PUT CLASS
+                case 'class':
+                    if(isset($input['old_name']) && isset($input['new_name'])){
+                        $old_name=$input['old_name'];
+                        $new_name=$input['new_name'];
+                        $modif = update_class($conn,$old_name,$new_name);
+                    }
             }
         }
         break;
@@ -232,10 +249,11 @@ switch ($method) {
         $input = json_decode(file_get_contents('php://input'), true);
     
         if (isset($input['type'])) {
-            $type = $input['type'];  // Type : classroom
+            $type = $input['type'];  // Type : classroom / courses / subject / class
     
             // insert en fonction du type
             switch ($type) {
+                // POST CLASSROOM
                 case 'classroom':
                     if (isset($input['num']) && isset($input['specificity'])) {
                         $num = $input['num'];
@@ -243,6 +261,7 @@ switch ($method) {
                         $modif =insert_classroom($conn, $num, $specificity);
                     }
                     break;
+                // POST COURSES
                 case 'courses':
                     if(isset($input['day']) && isset($input['date']) && isset($input['recurrent']) && isset($input['h_start']) && isset($input['h_end']) &&  isset($input['subject_id']) && isset($input['teacher_id']) && isset($input['class_name']) && isset($input['classroom_num']) ){
                         $day=$input['day'];
@@ -257,6 +276,22 @@ switch ($method) {
                         $modif = insert_courses($conn,$day,$date,$recurrent,$h_start,$h_end,$subject_id,$teacher_id,$class_name,$classroom_num);
                     }
                     break;
+                // POST SUBJECT
+                case 'subject':
+                    if(isset($input['name']) && isset($input['nb_hours']) && isset($input['specificity']) ){
+                        $name=$input['name'];
+                        $nb_hours=$input['nb_hours'];
+                        $specificity=$input['specificity'];
+                        $modif = insert_subject($conn,$name,$nb_hours,$specificity);
+                    }
+                    break;
+                // POST CLASS
+                case 'class':
+                    if(isset($input['name'])){
+                        $name=$input['name'];
+                        $modif = insert_class($conn,$name);
+                    }
+                    break;
             }
         }
         break;
@@ -265,22 +300,36 @@ switch ($method) {
         $input = json_decode(file_get_contents('php://input'), true);
     
         if (isset($input['type'])) {
-            $type = $input['type'];  // Type : classroom
+            $type = $input['type'];  // Type : classroom / courses / subject / class
     
             // Gérer la suppression en fonction du type
             switch ($type) {
-                // CLASSROOM
+                // DELETE CLASSROOM
                 case 'classroom':
                     if (isset($input['num'])) {
                         $num = $input['num'];
                         $modif = delete_classroom($conn, $num);
                     } 
                     break;
-                // COURSES
+                // DELETE COURSES
                 case 'courses':
                     if(isset($input['id'])){
                         $id=$input['id'];
                         $modif = delete_courses($conn,$id);
+                    }
+                    break;
+                // DELETE SUBJECT
+                case 'subject':
+                    if(isset($input['id'])){
+                        $id=$input['id'];
+                        $modif = delete_subject($conn,$id);
+                    }
+                    break;
+                // DELETE CLASS
+                case 'class':
+                    if(isset($input['name'])){
+                        $name=$input['name'];
+                        $modif = delete_class($conn,$name);
                     }
                     break;
             }
