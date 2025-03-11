@@ -195,7 +195,7 @@ switch ($method) {
         $input = json_decode(file_get_contents('php://input'), true);
 
         if (isset($input['type'])) {
-            $type = $input['type'];  // Type : classroom / courses / subject / class / student
+            $type = $input['type'];  // Type : classroom / courses / subject / class / student / teacher
 
             $modif=false;
             // maj en fonction du type
@@ -253,6 +253,31 @@ switch ($method) {
                         $password=$input['password'];
                         $modif = update_student($conn,$id,$name,$surname,$class_name,$mail,$password);
                     }
+                    break;
+                // PUT TEACHER // EN COURS MARCHE MAIS Y A UN TRUC AVEC LE JSON
+                /*case 'teacher':
+                    if( isset($input['id']) && isset($input['name']) && isset($input['surname']) && isset($input['mail']) && isset($input['password']) ){
+                        $id=$input['id'];
+                        $name=$input['name'];
+                        $surname=$input['surname'];
+                        $class_name=$input['class_name'];
+                        $mail=$input['mail'];
+                        $password=$input['password'];
+                        $modif = update_teacher($conn,$id,$name,$surname,$mail,$password);
+                    }
+                    break;
+                // PUT ADMIN // Même problème
+                case 'admin':
+                    if( isset($input['id']) && isset($input['name']) && isset($input['surname']) && isset($input['mail']) && isset($input['password']) ){
+                        $id=$input['id'];
+                        $name=$input['name'];
+                        $surname=$input['surname'];
+                        $class_name=$input['class_name'];
+                        $mail=$input['mail'];
+                        $password=$input['password'];
+                        $modif = update_admin($conn,$id,$name,$surname,$mail,$password);
+                    }
+                    break;*/
             }
         }
         break;
@@ -261,7 +286,7 @@ switch ($method) {
         $input = json_decode(file_get_contents('php://input'), true);
     
         if (isset($input['type'])) {
-            $type = $input['type'];  // Type : classroom / courses / subject / class / class_teacher / teacher_subject / student
+            $type = $input['type'];  // Type : classroom / courses / subject / class / class_teacher / teacher_subject / student / teacher / admin
     
             // insert en fonction du type
             switch ($type) {
@@ -331,6 +356,26 @@ switch ($method) {
                         $modif = insert_student($conn,$name,$surname,$class_name,$mail,$password);
                     }
                     break;
+                // POST TEACHER
+                case 'teacher':
+                    if( isset($input['name']) && isset($input['surname']) && isset($input['mail']) && isset($input['password']) ){
+                        $name=$input['name'];
+                        $surname=$input['surname'];
+                        $mail=$input['mail'];
+                        $password=$input['password'];
+                        $modif = insert_teacher($conn,$name,$surname,$mail,$password);
+                    }
+                    break;
+                // POST ADMIN
+                case 'admin':
+                    if( isset($input['name']) && isset($input['surname']) && isset($input['mail']) && isset($input['password']) ){
+                        $name=$input['name'];
+                        $surname=$input['surname'];
+                        $mail=$input['mail'];
+                        $password=$input['password'];
+                        $modif = insert_admin($conn,$name,$surname,$mail,$password);
+                    }
+                    break;
             }
         }
         break;
@@ -393,6 +438,13 @@ switch ($method) {
                         $modif = delete_student($conn,$id);
                     }
                     break;
+                // DELETE TEACHER
+                /*case 'teacher':
+                    if(isset($input['id'])){
+                        $id=$input['id'];
+                        $modif = delete_teacher($conn,$id);
+                    }
+                    break;*/
             }
         }
 
