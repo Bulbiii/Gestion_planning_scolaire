@@ -193,7 +193,6 @@ function delete_student($conn,$id){
     $res_student=mysqli_query($conn,"DELETE FROM `student` WHERE id=$id");
     if($res_student){
         $res_user=mysqli_query($conn,"DELETE FROM `user` WHERE id=$id_user");
-        echo($res_user);
     }
 
     return $res_student && $res_user;

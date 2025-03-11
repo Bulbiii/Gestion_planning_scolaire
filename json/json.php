@@ -195,7 +195,7 @@ switch ($method) {
         $input = json_decode(file_get_contents('php://input'), true);
 
         if (isset($input['type'])) {
-            $type = $input['type'];  // Type : classroom / courses / subject / class
+            $type = $input['type'];  // Type : classroom / courses / subject / class / student
 
             $modif=false;
             // maj en fonction du type
@@ -242,6 +242,17 @@ switch ($method) {
                         $modif = update_class($conn,$old_name,$new_name);
                     }
                     break;
+                // PUT STUDENT
+                case 'student':
+                    if( isset($input['id']) && isset($input['name']) && isset($input['surname']) && isset($input['class_name']) && isset($input['mail']) && isset($input['password']) ){
+                        $id=$input['id'];
+                        $name=$input['name'];
+                        $surname=$input['surname'];
+                        $class_name=$input['class_name'];
+                        $mail=$input['mail'];
+                        $password=$input['password'];
+                        $modif = update_student($conn,$id,$name,$surname,$class_name,$mail,$password);
+                    }
             }
         }
         break;
@@ -250,7 +261,7 @@ switch ($method) {
         $input = json_decode(file_get_contents('php://input'), true);
     
         if (isset($input['type'])) {
-            $type = $input['type'];  // Type : classroom / courses / subject / class / class_teacher / teacher_subject
+            $type = $input['type'];  // Type : classroom / courses / subject / class / class_teacher / teacher_subject / student
     
             // insert en fonction du type
             switch ($type) {
@@ -309,6 +320,17 @@ switch ($method) {
                         $modif = insert_teacher_subject($conn,$id_teacher,$id_subject);
                     }
                     break;
+                // POST STUDENT
+                case 'student':
+                    if( isset($input['name']) && isset($input['surname']) && isset($input['class_name']) && isset($input['mail']) && isset($input['password']) ){
+                        $name=$input['name'];
+                        $surname=$input['surname'];
+                        $class_name=$input['class_name'];
+                        $mail=$input['mail'];
+                        $password=$input['password'];
+                        $modif = insert_student($conn,$name,$surname,$class_name,$mail,$password);
+                    }
+                    break;
             }
         }
         break;
@@ -317,7 +339,7 @@ switch ($method) {
         $input = json_decode(file_get_contents('php://input'), true);
     
         if (isset($input['type'])) {
-            $type = $input['type'];  // Type : classroom / courses / subject / class / class_teacher / teacher_subject
+            $type = $input['type'];  // Type : classroom / courses / subject / class / class_teacher / teacher_subject / student
     
             // Gérer la suppression en fonction du type
             switch ($type) {
@@ -362,6 +384,13 @@ switch ($method) {
                         $id_teacher=$input['id_teacher'];
                         $id_subject=$input['id_subject'];
                         $modif = delete_teacher_subject($conn,$id_teacher,$id_subject);
+                    }
+                    break;
+                // DELETE STUDENT
+                case 'student':
+                    if(isset($input['id'])){
+                        $id=$input['id'];
+                        $modif = delete_student($conn,$id);
                     }
                     break;
             }
