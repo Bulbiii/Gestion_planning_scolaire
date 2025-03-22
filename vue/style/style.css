@@ -1,7 +1,10 @@
+
 body{
     display: flex;
-
     flex-direction: column;
+    background-color: rgb(234, 154, 151);
+    justify-content: center; 
+    margin: 0;   
 }
 
 /*
@@ -12,24 +15,44 @@ body{
 
 header{
     display: flex;
-
+    height: 7vh;
     justify-content: space-between;
-
+    font-size: larger;
     border: 2px solid pink;
+
+    align-items: center;
+    background-color:  #9ccfd8;
+    margin-top: 0;
+    }
+
+#weekInfoHeader{
+    font-weight: bolder;
+    font-size: 2vw;
 }
 
+#weekInfoHeader::before{
+    color: rgb(204, 0, 255);
+    content: "➤ "; 
+}
+
+#weekInfoHeader::after{
+    color: rgb(204, 0, 255);
+    content: " ⮜"; 
+}
 
 #dateInfoContainer{
     display: flex;
-
-    border: 2px solid orange;
+    justify-content: center;
+    align-items: center;
+    font-size: 2vh;
 }
 
 
 #userInfoContainer{
     display: flex;
-
-    border: 2px solid green;
+    justify-content: center;
+    align-items: center;
+    font-size: 2vh;
 }
 
 
@@ -45,20 +68,6 @@ header p{
 ---------------------------------------
 */
 
-
-#ttGrid{
-    display: grid;
-
-    /* 1fr correspon to a fraction : 1fr with 10 lines -> 1/10, 1fr with 5 lines -> 1/5 */
-    grid-template-columns: 50px repeat(5, 1fr); /* Number of columns and the space taken by each of them*/
-    grid-template-rows: repeat(13, 1fr);
-
-    column-gap: 5px; /* Spacing */
-
-    border-collapse: collapse;
-    border: 2px solid red;
-}
-
 .cell{
     margin: 0;
     height: 6vh;
@@ -66,8 +75,78 @@ header p{
     line-height: 6vh; /* Allow to vertically center text */
     text-align: center;
 
-    border: 2px solid blue;
+    border: 2px solid ;
+    border-radius: 5px;
+
+    font-weight :bold ;
+    background-color: rgb(234, 154, 151);
+
+    transition: 0.3s ease-in-out;
 }
+#ttGrid{
+    display: grid;
+    /* 1fr correspond to a fraction : 1fr with 10 lines -> 1/10, 1fr with 5 lines -> 1/5 */
+   grid-template-columns: 50px repeat(5, 1fr); /* Number of columns and the space taken by each of them*/
+   grid-template-rows: repeat(13, 1fr);
+
+   gap: 1vw 3vw; 
+
+    margin-top: 0;
+    border-collapse: collapse;
+    border: 2px ;
+    border-radius: 1vw;
+    padding: 15px;
+    background-color: rgb(196,167,231);
+    
+    transform: scale(0.8);
+    margin: -5.5vw; /*bidouilles*/
+}
+
+.courseCell {
+    cursor: pointer;
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    border: 2px solid #4b7740; /*bidouilles*/
+}
+
+.courseCell:hover {
+    background-color: rgb(209, 51, 51);
+}
+
+#corner{
+    visibility: hidden;
+}
+
+.timeTitle{
+    width: 4.5vw;
+    font-size: 1.1vw;
+    background-color: rgb(144,122,169);
+}
+
+#day_0{
+    background-color: rgb(144,122,169);
+}
+#day_1{
+    background-color: rgb(144,122,169);
+}
+#day_2{
+    background-color: rgb(144,122,169);
+}
+#day_3{
+    background-color: rgb(144,122,169);
+}
+#day_4{
+    background-color: rgb(144,122,169);
+}
+
+/*
+-----------------------------------
+-------------- Button --------------
+-----------------------------------
+*/
+
 
 
 
@@ -87,42 +166,84 @@ header p{
     height: 100vh;
 
     z-index: 9;
-
+    
     background-color: rgba(0, 0, 0, 0.3);
+
+    filter: blur(15px);
 }
 
+#popupStartHour{
+    margin: 3vh auto 0 auto;
+    text-align: center;
+}
 
+#popupEndHour{
+    text-align: center;
+    margin-top: 0;
+}
+#popupRoom{
+    text-align: center;
+}
+
+#popupContent{
+    margin-top: 2vh;
+    padding-left: 1vw;
+    height: fit-content;
+    font-size: large;
+    font-weight: lighter;
+
+    min-height: 150px;
+    min-width: 150px;
+}
+    
 #popupArticle{
     position: absolute;
-
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
     left: 35vw;
     top: 30vh;
 
     width: 30vw;
-    height: 40vh;
+    height: 35vh;
+
+    min-height: 100px;
+    min-width: 200px;
 
     z-index: 10;
 
-    background-color: white;
+    background-color: rgb(234, 154, 151);
+
+    /*padding: 0 2vw 2vh 2vw;*/ 
 }
 
 
 #closePopupButton{
     position: absolute;
+    border-radius: 55%;
+    background:none;
+    border: none;
+    right: 0.5vw;
+    top: 0.5vh;   
+    transition: transform 0.3s ease-in-out; 
+}
 
-    right: 0;
-    top: 0;
+
+#closePopupButton:hover{
+    transform: rotate(280deg);
 }
 
 
 #popupTitle{
     text-align: center;
+    color: black; 
+    font-weight: bolder;
+    background-color:  #9ccfd8;
+    margin: 0;
+    width: 100%;
+    font-size: 2em;
+    padding: 1vh 0 1vh 0 ;
 }
-
-
-
-
-
 
 
 /*
@@ -132,8 +253,16 @@ header p{
 */
 
 
+#currentWeekEntry{
+    text-align: center;
+    width: 5vw;
+}
+
 
 
 footer{
-    border: 2px solid brown;
+    display: flex;
+    justify-content: center;
+    border: 2px;
+    margin: 0;
 }

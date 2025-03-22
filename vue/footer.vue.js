@@ -16,7 +16,7 @@ function create_current_week_entry(container){
     let currentWeekEntry = create_element("input", container, "currentWeekEntry");
     
     currentWeekEntry.placeholder = "week number";
-    currentWeekEntry.value = 32; // input's value
+    currentWeekEntry.value = get_week_number(); // input's value
 
     currentWeekEntry.addEventListener("compositionstart", (e) => {
         currentWeekEntry.disabled = true; // allow to disable composition
