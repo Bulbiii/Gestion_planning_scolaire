@@ -11,7 +11,10 @@ function create_header(container){
 
     create_week_info_header(header);
 
+    create_week_info_header(header);
+
     create_user_info_header(header);
+
 }
 
 

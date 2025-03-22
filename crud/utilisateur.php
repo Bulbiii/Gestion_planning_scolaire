@@ -193,7 +193,6 @@ function delete_student($conn,$id){
     $res_student=mysqli_query($conn,"DELETE FROM `student` WHERE id=$id");
     if($res_student){
         $res_user=mysqli_query($conn,"DELETE FROM `user` WHERE id=$id_user");
-        echo($res_user);
     }
 
     return $res_student && $res_user;
@@ -223,9 +222,10 @@ function update_teacher($conn,$id,$name,$surname,$mail,$password){
 
     // On modifie `teacher`
     $res_teacher=mysqli_query($conn,"UPDATE teacher SET `name`='$name',surname='$surname' WHERE id=$id");
-
-    // On modifie `user`
-    $res_user=mysqli_query($conn,"UPDATE `user` SET `password`='$password',mail='$mail' WHERE id=$id_user");
+    if($res_teacher){ 
+        // On modifie `user`
+        $res_user=mysqli_query($conn,"UPDATE `user` SET `password`='$password',mail='$mail' WHERE id=$id_user");
+    }
 
     return $res_teacher && $res_user;
 }
@@ -303,7 +303,7 @@ function selectAll_class_teacher($conn,$id){
 
 // Selectionne toutes les contraintes d'un prof
 function selectAll_constraint_teacher($conn,$id_teacher){
-    $sql="SELECT `id`,`day`,`date`,h_start,h_end,recurrent,`description` FROM `constraint` WHERE id_teacher=$id_teacher";
+    $sql="SELECT `id`,`day`,`date_start`,`date_end`,h_start,h_end,recurrent,`description` FROM `constraint` WHERE id_teacher=$id_teacher";
     $res=mysqli_query($conn,$sql);
 
     $tab=[] ; 

@@ -236,13 +236,6 @@ header p{
 
 #popupTitle{
     text-align: center;
-    color: black; 
-    font-weight: bolder;
-    background-color:  #9ccfd8;
-    margin: 0;
-    width: 100%;
-    font-size: 2em;
-    padding: 1vh 0 1vh 0 ;
 }
 
 
@@ -255,7 +248,9 @@ header p{
 
 #currentWeekEntry{
     text-align: center;
+    background-color: red;
     width: 5vw;
+    
 }
 
 

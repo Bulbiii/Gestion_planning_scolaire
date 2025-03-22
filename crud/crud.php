@@ -377,7 +377,7 @@ function delete_constraint($conn,$id){
 
 // Crée une matière
 function insert_subject($conn,$name,$nb_hours,$specificity){
-    $sql="INSERT INTO `subject`(`name`,nb_hours,specificity) value('$name',$nb_hours,'$specificity')";
+    $sql="INSERT INTO `subject`(`name`,nb_hours,specificity) value('$name','$nb_hours','$specificity')";
     $res=mysqli_query($conn,$sql);
     return $res;
 }
@@ -391,7 +391,7 @@ function delete_subject($conn,$id){
 
 // Modifie une matière
 function update_subject($conn,$id,$name,$nb_hours,$specificity){
-    $sql="UPDATE `subject` SET `name`='$name',nb_hours=$nb_hours,specificity='$specificity' WHERE id=$id";
+    $sql="UPDATE `subject` SET `name`='$name',nb_hours='$nb_hours',specificity='$specificity' WHERE id=$id";
     $res=mysqli_query($conn,$sql);
     return $res;
 }
@@ -435,8 +435,8 @@ function delete_class($conn,$name){
 }
 
 // Modifie une class
-function update_class($conn,$ancien_name,$nouv_name){
-    $res=mysqli_query($conn,"UPDATE class SET `name`='$nouv_name' WHERE `name`='$ancien_name'");
+function update_class($conn,$old_name,$new_name){
+    $res=mysqli_query($conn,"UPDATE class SET `name`='$new_name' WHERE `name`='$old_name'");
     return $res;
 }
 
