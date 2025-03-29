@@ -3,6 +3,8 @@
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
+header('Content-Type: application/json; charset=utf-8');
+
 
 include "../db/db_connect.php";
 include "../crud/crud.php";
@@ -10,6 +12,7 @@ include "../crud/utilisateur.php";
 
 // boolean pour indiquer si les données ont été récupérées ou non
 $recupere=false;
+$modif=NULL;
 
 if(isset($_GET['table']) && isset($_GET['type'])){
     
@@ -180,8 +183,6 @@ if(isset($_GET['table']) && isset($_GET['type'])){
 }
 
 
-
-header('Content-Type: application/json');
 
 // Vérifier la méthode HTTP de la requête
 $method = $_SERVER['REQUEST_METHOD'];
@@ -461,13 +462,13 @@ if($recupere){
     $donnees_str = json_encode($donnees);
 
     /* Notifie la navigateur que le type de donnees est JSON*/
-    header('Content-Type: application/json; charset=utf-8');
+    //header('Content-Type: application/json; charset=utf-8');
 
     /* Ecrit les donnees au format JSON*/ 
     echo"${donnees_str}";
 }else{
    $donnees_str = json_encode("erreur");//("erreur");
-   header('Content-Type: application/json; charset=utf-8');
+   //header('Content-Type: application/json; charset=utf-8');
    echo"${donnees_str}";
 } 
 
