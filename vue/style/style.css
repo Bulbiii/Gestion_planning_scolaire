@@ -1,5 +1,23 @@
+/* Palette Rosé Pine */
+:root {
+    --base: #191724;
+    --surface: #1f1d2e;
+    --overlay: #26233a;
+    --muted: #6e6a86;
+    --subtle: #908caa;
+    --text: #e0def4;
+    --love: #eb6f92;
+    --gold: #f6c177;
+    --rose: #ebbcba;
+    --pine: #31748f;
+    --foam: #9ccfd8;
+    --iris: #c4a7e7;
+    --highlight-low: #21202e;
+    --highlight-med: #403d52;
+    --highlight-high: #524f67;
+}
 
-body{
+body {
     display: flex;
     flex-direction: column;
     background-color: var(--base);
@@ -134,73 +152,42 @@ button:hover {
     width: 100vw;
     height: 100vh;
     z-index: 9;
-    
     background-color: rgba(0, 0, 0, 0.3);
-
-    filter: blur(15px);
+    backdrop-filter: blur(15px);
 }
 
-#popupStartHour{
-    margin: 3vh auto 0 auto;
-    text-align: center;
-}
-
-#popupEndHour{
-    text-align: center;
-    margin-top: 0;
-}
-#popupRoom{
-    text-align: center;
-}
-
-#popupContent{
+#popupContent {
     margin-top: 2vh;
     padding-left: 1vw;
     height: fit-content;
     font-size: large;
     font-weight: lighter;
-
-    /*min-height: 150px;
-    min-width: 150px;*/
 }
-    
-#popupArticle{
+
+#popupArticle {
     position: absolute;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
     display: flex;
     justify-content: center;
     flex-direction: column;
     left: 35vw;
     top: 30vh;
-
-    /*width: 30vw;
-    height: 35vh;*/
-
     min-height: 100px;
     min-width: 200px;
-
     z-index: 10;
-
-    background-color: rgb(234, 154, 151);
-
-    /*padding: 0 2vw 2vh 2vw;*/ 
+    background-color: var(--surface);
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 #closePopupButton {
     position: absolute;
-    border-radius: 55%;
-    background:none;
+    border-radius: 50%;
+    background: none;
     border: none;
     right: 0.5vw;
-    top: 0.5vh;   
-    transition: transform 0.3s ease-in-out; 
-}
-
-
-#closePopupButton:hover{
-    transform: rotate(280deg);
+    top: 0.5vh;
+    transition: transform 0.3s ease-in-out;
 }
 
 #closePopupButton:hover {
@@ -238,13 +225,13 @@ button:hover, select:hover {
 select {
     appearance: none; 
     text-align: center;
-    color: black; 
-    font-weight: bolder;
-    background-color:  #9ccfd8;
-    margin: 0;
-    width: 100%;
-    font-size: 2em;
-    padding: 1vh 0 1vh 0 ;
+    cursor: pointer;
+}
+
+select::after {
+    content: "▼";
+    font-size: 0.8em;
+    margin-left: 0.5rem;
 }
 
 
@@ -255,6 +242,15 @@ select {
 #currentWeekEntry {
     text-align: center;
     width: 5vw;
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    border-top: 2px solid var(--highlight-high);
+    margin: 0;
+    padding: 1rem;
+    background-color: var(--surface);
 }
 
 
@@ -375,10 +371,4 @@ select {
     text-align: center;
     border: 1px solid var(--highlight-med);
     background-color: var(--overlay);
-}
-
-
-#modifyNote,
-#deleteNote {
-    width: 50%;
 }
