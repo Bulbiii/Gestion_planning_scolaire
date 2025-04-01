@@ -23,8 +23,11 @@ function create_main_vue(){
 function create_teacher_icons(container){
     let buttonContainer = create_element("section", container, "buttonMainSection");
 
-    let createNoteVueButton = create_element("button", buttonContainer, "createNoteVueButton", "Notes");
+    let createNoteVueButton = create_element("button", buttonContainer, "createNoteVueButton");
     createNoteVueButton.onclick = create_note_view;
+
+    let createNoteIcon = create_element("img", createNoteVueButton, "createNoteIcon");
+    createNoteIcon.src = "toto.png";
 
     create_class_select(buttonContainer);
 }

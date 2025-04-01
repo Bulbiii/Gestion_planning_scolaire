@@ -19,8 +19,11 @@ function create_note_view(_, note_obj=empty_note_obj, action="add"){
 function home_button(container){
     let header = create_element("header", container, "noteHeader");
 
-    let homeButton = create_element("button", header, "homeButtonNote", "Accueil");
+    let homeButton = create_element("button", header, "homeButtonNote");
     homeButton.onclick = create_main_vue;
+
+    let homeIcon = create_element("img", homeButton, "homeButtonIconNote");
+    homeIcon.src = "toto.png";
 }
 
 
@@ -245,15 +248,21 @@ function add_note_list_action(container){
     let modifyCell = create_element("td", container, "");
     modifyCell.classList.add("modifyNote");
     
-    let modifyButton = create_element("button", modifyCell, "", "M");
+    let modifyButton = create_element("button", modifyCell, "");
     modifyButton.onclick = modify_note;
+
+    let modifyIcon = create_element("img", modifyButton);
+    modifyIcon.src = "toto.png";
 
 
     let deleteCell = create_element("td", container, "");
     deleteCell.classList.add("deleteNote");
 
-    let deleteButton = create_element("button", deleteCell, "", "D");
+    let deleteButton = create_element("button", deleteCell, "");
     deleteButton.onclick = delete_note;
+
+    let deleteIcon = create_element("img", deleteButton);
+    deleteIcon.src = "toto.png";
 }
 
 function modify_note(){

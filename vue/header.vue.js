@@ -7,6 +7,8 @@ function create_header(container){
         header.innerHTML = "";
     }
 
+    create_theme_changer_header(header);
+
     create_date_info_header(header);
 
     create_week_info_header(header);
@@ -16,6 +18,15 @@ function create_header(container){
     create_user_info_header(header);
 
 }
+
+
+function create_theme_changer_header(container){
+    let themeChangerButton = create_element("button", container, "themeChangerHeader");
+    
+    let themeChangerIcon = create_element("img", themeChangerButton, "themeChangerIcon");
+    themeChangerIcon.src ="toto.png";
+}
+
 
 
 function create_date_info_header(container){
