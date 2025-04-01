@@ -6,7 +6,7 @@ function create_main_vue(){
 
     let main = create_element("main", body, "");
 
-    create_tt(main, schedule);
+    create_tt(main);
 
     let user_type = "prof";
 

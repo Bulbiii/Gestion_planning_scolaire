@@ -311,6 +311,7 @@ async function get_notes(){
             console.log("Erreur lors de l'importation des contraintes.");
             notes = empty_note_obj;
         } else {
+            console.log(response.data);
             notes = note_rs_to_info(response.data);
         }
         return notes;

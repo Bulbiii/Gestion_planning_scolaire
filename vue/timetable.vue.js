@@ -1,6 +1,10 @@
 // tt = timetable
 
-function create_tt(container){
+window.addEventListener("load", _ => {
+    update_tt();
+})
+
+async function create_tt(container){
     let ttSection = create_element("section", container, "timetableSection");
     let ttGrid = create_element("div", ttSection, "ttGrid");
 
@@ -9,11 +13,6 @@ function create_tt(container){
     add_time_titles(ttGrid); // time titles (left)
     
     add_cells(ttGrid); // empty cells (middle)
-
-    get_courses().then(schedule => {
-        add_courses(schedule); // add courses in empty cells
-    })
-    
 }
 
 
@@ -129,19 +128,19 @@ function close_popup(){
 
 
 
-function update_tt(weekNb){
+function update_tt(){
     let cells = document.querySelectorAll(".courseCell");
 
     cells.forEach(cell => {
         cell.innerHTML = ""; // remove content
     });
+    
+    get_courses().then(schedule => {
+        add_courses(schedule); // add courses in empty cells
+    })
 
-    // temporary
-    if (weekNb % 2 == 0){
-        add_courses(schedule);
-    } else {
-        add_courses(schedule_bis) // schedule_bis is temporary
-    }
+    let body = document.querySelector("body");
+    create_header(body);
 }
 
 async function get_courses(){
@@ -149,11 +148,9 @@ async function get_courses(){
     let id = currentClass;
 
     let dates = get_week_dates();
-
-    console.log(dates);
     
 
-    axios.get("/info3/json/json.php", {
+    let res = axios.get("/info3/json/json.php", {
         params : {
             table : "courses",
             type : "week",  
@@ -162,12 +159,17 @@ async function get_courses(){
             end : dates.end
         }
     }).then(res => {
+        let result;
         if (res.data == "erreur"){
             console.log("Erreur lors de l'importation des données");
         } else {
-            return rs_to_schedule(res.data);
+            result = rs_to_schedule(res.data);
+            
         }
+        return result;
     });
+
+    return res;
 }
 
 
@@ -180,7 +182,7 @@ function get_week_dates(){
     if (weekNumberElement == null) {
         let currentDate = new Date();
         // current day - day of the week (monday = 0, tuesday = 1, ...)
-        let startDay = currentDate.getDate() - (currentDate.getDay() - 1 % 7); // getDay starts on Sunday
+        let startDay = currentDate.getDate() - (currentDate.getDay() - 1 % 7); // -1 because getDay starts on Sunday
         
         startDate = new Date(currentDate.setDate(startDay));
         endDate = new Date(currentDate.setDate(startDay + 4));
@@ -200,18 +202,67 @@ function get_week_dates(){
     }
 
     // Start and end date display
-    let startDateStr = startDate.getFullYear() + "-" + startDate.getMonth() + "-" + startDate.getDate();
-    let endDateStr = endDate.getFullYear() + "-" + endDate.getMonth() + "-" + endDate.getDate();    
+    let startDateStr = startDate.getFullYear() + "-" + (startDate.getMonth() + 1) + "-" + startDate.getDate(); // + 1 because month start at 0
+    let endDateStr = endDate.getFullYear() + "-" + (endDate.getMonth() + 1) + "-" + endDate.getDate();    
 
     return {start : startDateStr, end : endDateStr};
 }
 
 
+function get_week_number(){
+    let weekNumberElement = document.querySelector("#currentWeekEntry");
+    let weekNumber;
+
+    if (weekNumberElement == null || weekNumberElement.value == "") {
+        // source : 
+        // https://www.geeksforgeeks.org/how-to-get-the-current-weeknumber-of-the-year/
+        let currentDate = new Date();
+
+        
+        // Number of days since January first of the current year
+        let januaryFirstDate = new Date(currentDate.getFullYear(), 0, 1);
+        
+        // 1000 ms dans une seconde ;
+        // 60 secondes dans une minute ;
+        // 60 minutes dans une heure ; 
+        // 24h dans une journée
+        // => ms in a day
+        // => (1000 * 60 * 60 * 24)
+        // = 86400000
+        // / (ms in a day) to get the number of days in a year
+        let dayNumberSinceJanFst = Math.floor((currentDate.getTime() - januaryFirstDate.getTime()) / 86400000);
+        // Math.floor to ignore the current date's time
+
+
+        // monday = 0; tuesday = 1; ...
+        let januaryFirstDay = januaryFirstDate.getDay() - 1 % 7; // -1 because getDay starts on Sunday
+
+        // day number is added because the first week can start before january if january first isn't a monday
+        // + 1 because the first week number is 1 not 0
+        weekNumber = Math.floor((dayNumberSinceJanFst + januaryFirstDay) / 7) + 1;
+    } else {
+        weekNumber = weekNumberElement.value;
+    }
+
+    return weekNumber;
+}
+
 function rs_to_schedule(res){
     let coursesWeek = {};
     
     res.forEach(courseDB => {
-        let startTime = 1;
+        let startTime = Number(courseDB.h_start.split(":")[0]);
+
+        let frenchDay = toFrenchDay[courseDB.day];
+
+        if (frenchDay in coursesWeek){
+            coursesWeek[frenchDay][startTime] = courseDB.subject.name;
+        } else {
+            coursesWeek[frenchDay] = {};
+            coursesWeek[frenchDay][startTime] = courseDB.subject.name;
+        }
     });
+
+    return coursesWeek;
     
 }
