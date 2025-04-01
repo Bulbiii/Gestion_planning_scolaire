@@ -254,12 +254,11 @@ switch ($method) {
                     }
                     break;
                 // PUT TEACHER // EN COURS MARCHE MAIS Y A UN TRUC AVEC LE JSON
-                /*case 'teacher':
+                case 'teacher':
                     if( isset($input['id']) && isset($input['name']) && isset($input['surname']) && isset($input['mail']) && isset($input['password']) ){
                         $id=$input['id'];
                         $name=$input['name'];
                         $surname=$input['surname'];
-                        $class_name=$input['class_name'];
                         $mail=$input['mail'];
                         $password=$input['password'];
                         $modif = update_teacher($conn,$id,$name,$surname,$mail,$password);
@@ -271,12 +270,11 @@ switch ($method) {
                         $id=$input['id'];
                         $name=$input['name'];
                         $surname=$input['surname'];
-                        $class_name=$input['class_name'];
                         $mail=$input['mail'];
                         $password=$input['password'];
                         $modif = update_admin($conn,$id,$name,$surname,$mail,$password);
                     }
-                    break;*/
+                    break;
             }
         }
         break;
@@ -438,12 +436,19 @@ switch ($method) {
                     }
                     break;
                 // DELETE TEACHER
-                /*case 'teacher':
+                case 'teacher':
                     if(isset($input['id'])){
                         $id=$input['id'];
                         $modif = delete_teacher($conn,$id);
                     }
-                    break;*/
+                    break;
+                // DELETE ADMIN
+                case 'admin':
+                    if(isset($input['id'])){
+                        $id=$input['id'];
+                        $modif = delete_admin($conn,$id);
+                    }
+                    break;
             }
         }
 
