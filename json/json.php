@@ -3,6 +3,8 @@
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
+header('Content-Type: application/json; charset=utf-8');
+
 
 include "../db/db_connect.php";
 include "../crud/crud.php";
@@ -10,6 +12,7 @@ include "../crud/utilisateur.php";
 
 // boolean pour indiquer si les données ont été récupérées ou non
 $recupere=false;
+$modif=NULL;
 
 if(isset($_GET['table']) && isset($_GET['type'])){
     
@@ -181,8 +184,6 @@ if(isset($_GET['table']) && isset($_GET['type'])){
 
 
 
-header('Content-Type: application/json');
-
 // Vérifier la méthode HTTP de la requête
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -193,7 +194,7 @@ switch ($method) {
         $input = json_decode(file_get_contents('php://input'), true);
 
         if (isset($input['type'])) {
-            $type = $input['type'];  // Type : classroom / courses / subject / class / student / teacher
+            $type = $input['type'];  // Type : classroom / courses / subject / class / student / teacher / admin
 
             $modif=false;
             // maj en fonction du type
@@ -252,30 +253,28 @@ switch ($method) {
                         $modif = update_student($conn,$id,$name,$surname,$class_name,$mail,$password);
                     }
                     break;
-                // PUT TEACHER // EN COURS MARCHE MAIS Y A UN TRUC AVEC LE JSON
-                /*case 'teacher':
+                // PUT TEACHER
+                case 'teacher':
                     if( isset($input['id']) && isset($input['name']) && isset($input['surname']) && isset($input['mail']) && isset($input['password']) ){
                         $id=$input['id'];
                         $name=$input['name'];
                         $surname=$input['surname'];
-                        $class_name=$input['class_name'];
                         $mail=$input['mail'];
                         $password=$input['password'];
                         $modif = update_teacher($conn,$id,$name,$surname,$mail,$password);
                     }
                     break;
-                // PUT ADMIN // Même problème
+                // PUT ADMIN
                 case 'admin':
                     if( isset($input['id']) && isset($input['name']) && isset($input['surname']) && isset($input['mail']) && isset($input['password']) ){
                         $id=$input['id'];
                         $name=$input['name'];
                         $surname=$input['surname'];
-                        $class_name=$input['class_name'];
                         $mail=$input['mail'];
                         $password=$input['password'];
                         $modif = update_admin($conn,$id,$name,$surname,$mail,$password);
                     }
-                    break;*/
+                    break;
             }
         }
         break;
@@ -382,7 +381,7 @@ switch ($method) {
         $input = json_decode(file_get_contents('php://input'), true);
     
         if (isset($input['type'])) {
-            $type = $input['type'];  // Type : classroom / courses / subject / class / class_teacher / teacher_subject / student
+            $type = $input['type'];  // Type : classroom / courses / subject / class / class_teacher / teacher_subject / student / teacher / admin
     
             // Gérer la suppression en fonction du type
             switch ($type) {
@@ -437,12 +436,19 @@ switch ($method) {
                     }
                     break;
                 // DELETE TEACHER
-                /*case 'teacher':
+                case 'teacher':
                     if(isset($input['id'])){
                         $id=$input['id'];
                         $modif = delete_teacher($conn,$id);
                     }
-                    break;*/
+                    break;
+                // DELETE ADMIN
+                case 'admin':
+                    if(isset($input['id'])){
+                        $id=$input['id'];
+                        $modif = delete_admin($conn,$id);
+                    }
+                    break;
             }
         }
 
@@ -461,13 +467,13 @@ if($recupere){
     $donnees_str = json_encode($donnees);
 
     /* Notifie la navigateur que le type de donnees est JSON*/
-    header('Content-Type: application/json; charset=utf-8');
+    //header('Content-Type: application/json; charset=utf-8');
 
     /* Ecrit les donnees au format JSON*/ 
     echo"${donnees_str}";
 }else{
    $donnees_str = json_encode("erreur");//("erreur");
-   header('Content-Type: application/json; charset=utf-8');
+   //header('Content-Type: application/json; charset=utf-8');
    echo"${donnees_str}";
 } 
 

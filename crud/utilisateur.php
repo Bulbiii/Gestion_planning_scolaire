@@ -419,7 +419,6 @@ function delete_admin($conn,$id){
     $res_admin=mysqli_query($conn,"DELETE FROM `admin` WHERE id=$id");
     if($res_admin){
         $res_user=mysqli_query($conn,"DELETE FROM `user` WHERE id=$id_user");
-        echo($res_user);
     }
 
     return $res_admin && $res_user;
