@@ -194,7 +194,7 @@ switch ($method) {
         $input = json_decode(file_get_contents('php://input'), true);
 
         if (isset($input['type'])) {
-            $type = $input['type'];  // Type : classroom / courses / subject / class / student / teacher
+            $type = $input['type'];  // Type : classroom / courses / subject / class / student / teacher / admin
 
             $modif=false;
             // maj en fonction du type
@@ -253,7 +253,7 @@ switch ($method) {
                         $modif = update_student($conn,$id,$name,$surname,$class_name,$mail,$password);
                     }
                     break;
-                // PUT TEACHER // EN COURS MARCHE MAIS Y A UN TRUC AVEC LE JSON
+                // PUT TEACHER
                 case 'teacher':
                     if( isset($input['id']) && isset($input['name']) && isset($input['surname']) && isset($input['mail']) && isset($input['password']) ){
                         $id=$input['id'];
@@ -264,7 +264,7 @@ switch ($method) {
                         $modif = update_teacher($conn,$id,$name,$surname,$mail,$password);
                     }
                     break;
-                // PUT ADMIN // Même problème
+                // PUT ADMIN
                 case 'admin':
                     if( isset($input['id']) && isset($input['name']) && isset($input['surname']) && isset($input['mail']) && isset($input['password']) ){
                         $id=$input['id'];
@@ -381,7 +381,7 @@ switch ($method) {
         $input = json_decode(file_get_contents('php://input'), true);
     
         if (isset($input['type'])) {
-            $type = $input['type'];  // Type : classroom / courses / subject / class / class_teacher / teacher_subject / student
+            $type = $input['type'];  // Type : classroom / courses / subject / class / class_teacher / teacher_subject / student / teacher / admin
     
             // Gérer la suppression en fonction du type
             switch ($type) {
