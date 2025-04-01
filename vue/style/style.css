@@ -1,105 +1,105 @@
-
-body{
-    display: flex;
-    flex-direction: column;
-    background-color: rgb(234, 154, 151);
-    justify-content: center; 
-    margin: 0;   
+/* Palette Rosé Pine */
+:root {
+    --base: #191724;
+    --surface: #1f1d2e;
+    --overlay: #26233a;
+    --muted: #6e6a86;
+    --subtle: #908caa;
+    --text: #e0def4;
+    --love: #eb6f92;
+    --gold: #f6c177;
+    --rose: #ebbcba;
+    --pine: #31748f;
+    --foam: #9ccfd8;
+    --iris: #c4a7e7;
+    --highlight-low: #21202e;
+    --highlight-med: #403d52;
+    --highlight-high: #524f67;
 }
 
-/*
------------------------------------------------
--------------- Main frame header --------------
------------------------------------------------
-*/
+body {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--base);
+    color: var(--text);
+    justify-content: center;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
 
-header{
+/* -----------------------------------------------
+-------------- Main frame header --------------
+----------------------------------------------- */
+
+header {
     display: flex;
     height: 7vh;
     justify-content: space-between;
     font-size: larger;
-    border: 2px solid pink;
-
+    border-bottom: 2px solid var(--highlight-high);
     align-items: center;
-    background-color:  #9ccfd8;
-    margin-top: 0;
-    }
+    background-color: var(--surface);
+    padding: 0 2vw;
+    margin-bottom: 2vh;
+}
 
-#weekInfoHeader{
+#weekInfoHeader {
     font-weight: bolder;
     font-size: 2vw;
 }
 
-#weekInfoHeader::before{
-    color: rgb(204, 0, 255);
-    content: "➤ "; 
+#weekInfoHeader::before {
+    color: var(--iris);
+    content: "➤ ";
 }
 
-#weekInfoHeader::after{
-    color: rgb(204, 0, 255);
-    content: " ⮜"; 
+#weekInfoHeader::after {
+    color: var(--iris);
+    content: " ⮜";
 }
 
-#dateInfoContainer{
+#dateInfoContainer, #userInfoContainer {
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 2vh;
 }
 
-
-#userInfoContainer{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 2vh;
-}
-
-
-header p{
+header p {
     margin-left: 10px;
     margin-right: 10px;
 }
 
-
-/*
----------------------------------------
+/* ---------------------------------------
 -------------- TimeTable --------------
----------------------------------------
-*/
-
-.cell{
+--------------------------------------- */
+#corner{
+    visibility: hidden;
+}
+.cell {
     margin: 0;
     height: 6vh;
-
-    line-height: 6vh; /* Allow to vertically center text */
+    line-height: 6vh;
     text-align: center;
-
-    border: 2px solid ;
+    border: 2px solid var(--highlight-med);
     border-radius: 5px;
-
-    font-weight :bold ;
-    background-color: rgb(234, 154, 151);
-
+    font-weight: bold;
+    background-color: var(--overlay);
+    color: var(--text);
     transition: 0.3s ease-in-out;
 }
-#ttGrid{
+
+#ttGrid {
     display: grid;
-    /* 1fr correspond to a fraction : 1fr with 10 lines -> 1/10, 1fr with 5 lines -> 1/5 */
-   grid-template-columns: 50px repeat(5, 1fr); /* Number of columns and the space taken by each of them*/
-   grid-template-rows: repeat(13, 1fr);
-
-   gap: 1vw 3vw; 
-
+    grid-template-columns: 50px repeat(5, 1fr);
+    grid-template-rows: repeat(13, 1fr);
+    gap: 1vw 3vw;
     margin-top: 0;
-    border-collapse: collapse;
-    border: 2px ;
-    border-radius: 1vw;
     padding: 15px;
-    background-color: rgb(196,167,231);
-    
+    background-color: var(--surface);
     transform: scale(0.8);
-    margin: -5.5vw; /*bidouilles*/
+    margin: -5.5vw;
+    border-radius: 1vw;
 }
 
 .courseCell {
@@ -108,156 +108,267 @@ header p{
     font-size: 1rem;
     font-weight: bold;
     border-radius: 5px;
-    border: 2px solid #4b7740; /*bidouilles*/
+    border: 2px solid var(--pine);
+    background-color: var(--rose);
+    color: var(--base);
 }
 
 .courseCell:hover {
-    background-color: rgb(209, 51, 51);
+    background-color: var(--love);
 }
 
-#corner{
-    visibility: hidden;
+.timeTitle, #day_0, #day_1, #day_2, #day_3, #day_4 {
+    background-color: var(--highlight-med);
 }
 
-.timeTitle{
-    width: 4.5vw;
-    font-size: 1.1vw;
-    background-color: rgb(144,122,169);
-}
-
-#day_0{
-    background-color: rgb(144,122,169);
-}
-#day_1{
-    background-color: rgb(144,122,169);
-}
-#day_2{
-    background-color: rgb(144,122,169);
-}
-#day_3{
-    background-color: rgb(144,122,169);
-}
-#day_4{
-    background-color: rgb(144,122,169);
-}
-
-/*
------------------------------------
+/* -----------------------------------
 -------------- Button --------------
------------------------------------
-*/
+----------------------------------- */
 
+button {
+    background-color: var(--pine);
+    color: var(--text);
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease-in-out;
+    cursor: pointer;
+}
 
+button:hover {
+    background-color: var(--iris);
+}
 
-
-/*
------------------------------------
+/* -----------------------------------
 -------------- Popup --------------
------------------------------------
-*/
+----------------------------------- */
 
-#blockBackground{
+#blockBackground {
     position: absolute;
-
-    left: -0;
+    left: 0;
     top: 0;
-
     width: 100vw;
     height: 100vh;
-
     z-index: 9;
-    
     background-color: rgba(0, 0, 0, 0.3);
-
-    filter: blur(15px);
+    backdrop-filter: blur(15px);
 }
 
-#popupStartHour{
-    margin: 3vh auto 0 auto;
-    text-align: center;
-}
-
-#popupEndHour{
-    text-align: center;
-    margin-top: 0;
-}
-#popupRoom{
-    text-align: center;
-}
-
-#popupContent{
+#popupContent {
     margin-top: 2vh;
     padding-left: 1vw;
     height: fit-content;
     font-size: large;
     font-weight: lighter;
-
-    min-height: 150px;
-    min-width: 150px;
 }
-    
-#popupArticle{
+
+#popupArticle {
     position: absolute;
     display: flex;
     justify-content: center;
     flex-direction: column;
     left: 35vw;
     top: 30vh;
-
-    width: 30vw;
-    height: 35vh;
-
     min-height: 100px;
     min-width: 200px;
-
     z-index: 10;
-
-    background-color: rgb(234, 154, 151);
-
-    /*padding: 0 2vw 2vh 2vw;*/ 
+    background-color: var(--surface);
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-
-#closePopupButton{
+#closePopupButton {
     position: absolute;
-    border-radius: 55%;
-    background:none;
+    border-radius: 50%;
+    background: none;
     border: none;
     right: 0.5vw;
-    top: 0.5vh;   
-    transition: transform 0.3s ease-in-out; 
+    top: 0.5vh;
+    transition: transform 0.3s ease-in-out;
 }
 
-
-#closePopupButton:hover{
+#closePopupButton:hover {
     transform: rotate(280deg);
 }
 
-
-#popupTitle{
+#popupTitle {
     text-align: center;
+    color: var(--text);
+    font-weight: bolder;
+    background-color: var(--highlight-med);
+    margin: 0;
+    width: 100%;
+    font-size: 2em;
+    padding: 1vh 0;
+    border-radius: 5px;
+}
+
+button, select {
+    background-color: var(--pine);
+    color: var(--text);
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+button:hover, select:hover {
+    background-color: var(--iris);
+}
+
+select {
+    appearance: none; 
+    text-align: center;
+    cursor: pointer;
+}
+
+select::after {
+    content: "▼";
+    font-size: 0.8em;
+    margin-left: 0.5rem;
 }
 
 
-/*
-----------------------------------------
+/* ----------------------------------------
 ---------------- Footer ----------------
-----------------------------------------
-*/
+---------------------------------------- */
 
-
-#currentWeekEntry{
+#currentWeekEntry {
     text-align: center;
-    background-color: red;
     width: 5vw;
-    
 }
 
-
-
-footer{
+footer {
     display: flex;
     justify-content: center;
-    border: 2px;
+    border-top: 2px solid var(--highlight-high);
     margin: 0;
+    padding: 1rem;
+    background-color: var(--surface);
+}
+
+
+
+
+/*-------------------NOTES--------------------*/
+#noteHeader{
+    display: flex;
+    justify-content: center;
+}
+
+#homeButtonNote {
+    background-color: var(--pine);
+    color: var(--text);
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+#homeButtonNote:hover {
+    background-color: var(--iris);
+}
+
+/*NOTE*/
+#noteUnavContainer{
+    display: flex;
+    flex-direction: column;
+}
+#noteUnavLabel, #noteRecLabel, #noteDescLabel{
+    font-weight: bold;
+    font-size: 1.3rem;
+    margin: 0 1em 1em 2rem;
+}
+#noteUnavInputStartDate, #noteUnavInputStartTime, #noteUnavInputEndDate, #noteUnavInputEndTime{
+    display: flex;
+    padding: 0.5rem;
+    margin: 1rem 0 0 3vw;
+    border-radius: 5px;
+    border: 2px solid var(--highlight-med);
+    background-color: var(--overlay);
+    color: var(--text);
+    font-size: 1rem;
+    width: 30%;
+}
+
+
+#noteRecContainer {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    margin-top: 3vh;
+    font-weight: bold;
+}
+
+#noteRecCheckboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-left: 3vw;
+    justify-content: space-between;
+    width: 33%;
+}
+
+
+#noteDescContainer {
+    display: flex;
+    flex-direction: column;
+    margin-top: 3vh;
+    margin-bottom: 3vh;
+}
+
+#noteDescInput {
+    margin-left: 3vw;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    border-radius: 5px;
+    border: 2px solid var(--highlight-med);
+    background-color: var(--overlay);
+    color: var(--text);
+    font-size: 1rem;
+    width: 30%;
+}
+
+
+#actionNoteButton {
+    background-color: var(--pine);
+    color: var(--text);
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    width: 20%;
+    margin-left: 3vw;
+    margin-bottom: 2vh;
+}
+
+#actionNoteButton:hover {
+    background-color: var(--iris);
+}
+
+
+#noteTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+}
+
+#noteTable th,
+#noteTable td {
+    padding: 1rem;
+    text-align: center;
+    border: 1px solid var(--highlight-med);
+    background-color: var(--overlay);
 }
