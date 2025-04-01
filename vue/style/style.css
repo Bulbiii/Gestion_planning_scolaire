@@ -1,3 +1,4 @@
+
 body{
     display: flex;
     flex-direction: column;
@@ -165,36 +166,83 @@ header p{
     height: 100vh;
 
     z-index: 9;
-
+    
     background-color: rgba(0, 0, 0, 0.3);
+
+    filter: blur(15px);
 }
 
+#popupStartHour{
+    margin: 3vh auto 0 auto;
+    text-align: center;
+}
 
+#popupEndHour{
+    text-align: center;
+    margin-top: 0;
+}
+#popupRoom{
+    text-align: center;
+}
+
+#popupContent{
+    margin-top: 2vh;
+    padding-left: 1vw;
+    height: fit-content;
+    font-size: large;
+    font-weight: lighter;
+
+    /*min-height: 150px;
+    min-width: 150px;*/
+}
+    
 #popupArticle{
     position: absolute;
-
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
     left: 35vw;
     top: 30vh;
 
-    width: 30vw;
-    height: 40vh;
+    /*width: 30vw;
+    height: 35vh;*/
+
+    min-height: 100px;
+    min-width: 200px;
 
     z-index: 10;
 
-    background-color: white;
+    background-color: rgb(234, 154, 151);
+
+    /*padding: 0 2vw 2vh 2vw;*/ 
 }
 
 
 #closePopupButton{
     position: absolute;
+    border-radius: 55%;
+    background:none;
+    border: none;
+    right: 0.5vw;
+    top: 0.5vh;   
+    transition: transform 0.3s ease-in-out; 
+}
 
-    right: 0;
-    top: 0;
+
+#closePopupButton:hover{
+    transform: rotate(280deg);
 }
 
 
 #popupTitle{
     text-align: center;
+    color: black; 
+    font-weight: bolder;
+    background-color:  #9ccfd8;
+    margin: 0;
+    width: 100%;
+    font-size: 2em;
+    padding: 1vh 0 1vh 0 ;
 }
 
 
@@ -207,9 +255,7 @@ header p{
 
 #currentWeekEntry{
     text-align: center;
-    background-color: red;
     width: 5vw;
-    
 }
 
 

@@ -1,6 +1,6 @@
 // tt = timetable
 
-function create_tt(container, schedule){
+function create_tt(container){
     let ttSection = create_element("section", container, "timetableSection");
     let ttGrid = create_element("div", ttSection, "ttGrid");
 
@@ -9,7 +9,10 @@ function create_tt(container, schedule){
     add_time_titles(ttGrid); // time titles (left)
     
     add_cells(ttGrid); // empty cells (middle)
-    add_courses(schedule); // add courses in empty cells
+
+    get_courses().then(schedule => {
+        add_courses(schedule); // add courses in empty cells
+    })
     
 }
 
@@ -98,15 +101,17 @@ function add_popup_content(popup, courseTitle){
     // course's title
     let title = create_element("h2", popup, "popupTitle", courseTitle);
 
+    let popupContent = create_element("div", popup, "popupContent");
+
     // course's description
-    let desc = create_element("p", popup, "popupDesc", "Texte temporaire très intéressant");
+    let desc = create_element("p", popupContent, "popupDesc", "Texte temporaire très intéressant");
 
     // start and end hour
-    let startHour = create_element("p", popup, "popupStartHour", "Heure départ : 8h00");
-    let endHour = create_element("p", popup, "popupEndHour", "Heure de fin : 9h00");
+    let startHour = create_element("p", popupContent, "popupStartHour", "Heure départ : 8h00");
+    let endHour = create_element("p", popupContent, "popupEndHour", "Heure de fin : 9h00");
 
     // course's room
-    let room = create_element("p", popup, "popupRoom", "Room : 8C");
+    let room = create_element("p", popupContent, "popupRoom", "Salle : 8C");
 }
 
 
@@ -137,4 +142,76 @@ function update_tt(weekNb){
     } else {
         add_courses(schedule_bis) // schedule_bis is temporary
     }
+}
+
+async function get_courses(){
+    // class name
+    let id = currentClass;
+
+    let dates = get_week_dates();
+
+    console.log(dates);
+    
+
+    axios.get("/info3/json/json.php", {
+        params : {
+            table : "courses",
+            type : "week",  
+            id : "4A",
+            start : dates.start,
+            end : dates.end
+        }
+    }).then(res => {
+        if (res.data == "erreur"){
+            console.log("Erreur lors de l'importation des données");
+        } else {
+            return rs_to_schedule(res.data);
+        }
+    });
+}
+
+
+function get_week_dates(){
+    let weekNumberElement = document.querySelector("#currentWeekEntry");
+
+    let startDate;
+    let endDate;
+
+    if (weekNumberElement == null) {
+        let currentDate = new Date();
+        // current day - day of the week (monday = 0, tuesday = 1, ...)
+        let startDay = currentDate.getDate() - (currentDate.getDay() - 1 % 7); // getDay starts on Sunday
+        
+        startDate = new Date(currentDate.setDate(startDay));
+        endDate = new Date(currentDate.setDate(startDay + 4));
+    } else {
+        let weekNumber = weekNumberElement.value;
+        
+        // week's date using week's number
+        // source : https://stackoverflow.com/questions/16590500/calculate-date-from-week-number-in-javascript
+        let dayNumber = (weekNumber - 1) * 7 - 1 // -1 because the first week is 1 not 0 ; + 1 because the first day is 1
+        let year = new Date().getFullYear();
+        
+        // Start date
+        startDate = new Date(year, 1, dayNumber) // will correct date
+        
+        // End date
+        endDate = new Date(year, 1, dayNumber + 4) // + 4 to have friday
+    }
+
+    // Start and end date display
+    let startDateStr = startDate.getFullYear() + "-" + startDate.getMonth() + "-" + startDate.getDate();
+    let endDateStr = endDate.getFullYear() + "-" + endDate.getMonth() + "-" + endDate.getDate();    
+
+    return {start : startDateStr, end : endDateStr};
+}
+
+
+function rs_to_schedule(res){
+    let coursesWeek = {};
+    
+    res.forEach(courseDB => {
+        let startTime = 1;
+    });
+    
 }
