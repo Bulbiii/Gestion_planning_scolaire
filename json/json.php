@@ -133,10 +133,15 @@ if(isset($_GET['table']) && isset($_GET['type'])){
             $id=$_GET['id'];
             $donnees=select_user($conn,$id);
             $recupere=true;  
-        }elseif($type="byMail" && isset($_GET['mail']) && isset($_GET['mdp'])){ // user selon mail/mdp : byMail + mail + mdp
+        }elseif($type==="byMail" && isset($_GET['mail']) && isset($_GET['mdp'])){ // user selon mail/mdp : byMail + mail + mdp
             $mail=$_GET['mail'];
             $mdp=$_GET['mdp'];
             $donnees=select_user_mail_mdp($conn,$mail,$mdp);
+            $recupere=true;
+        }elseif($type==="completByMail" && isset($_GET['mail'])  && isset($_GET['mdp'])) { // user complet selon mail/mdp : completByMail + mail + mdp
+            $mail=$_GET['mail'];
+            $mdp=$_GET['mdp'];
+            $donnees=select_user_complet_mail_mdp($conn,$mail,$mdp);
             $recupere=true;
         }
     }
@@ -415,10 +420,13 @@ switch ($method) {
                     break;
                 // DELETE CLASS_TEACHER
                 case 'class_teacher':
-                    if(isset($input['teacher_id']) && isset($input['class_name'])){
+                    if(isset($input['teacher_id']) && isset($input['class_name'])){ // supprime une table : teacher_id + class_name
                         $teacher_id = $input['teacher_id'];
                         $class_name = $input['class_name'];
                         $modif = delete_class_teacher($conn,$teacher_id,$class_name);
+                    }else if(isset($input['teacher_id']) && isset($input['all'])){ // supprime toutes les class_teacher d'un prof : teacher_id + all
+                        $teacher_id = $input['teacher_id'];
+                        $modif = delete_all_class_teacher($conn,$teacher_id);
                     }
                 // DELETE TEACHER_SUBJECT
                 case 'teacher_subject':
@@ -426,6 +434,9 @@ switch ($method) {
                         $id_teacher=$input['id_teacher'];
                         $id_subject=$input['id_subject'];
                         $modif = delete_teacher_subject($conn,$id_teacher,$id_subject);
+                    }else if(isset($input['id_teacher']) && isset($input['all'])){
+                        $id_teacher=$input['id_teacher'];
+                        $modif = delete_all_teacher_subject($conn,$id_teacher);
                     }
                     break;
                 // DELETE STUDENT

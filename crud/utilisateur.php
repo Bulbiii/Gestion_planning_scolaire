@@ -122,6 +122,27 @@ function select_user($conn,$id){
 	return $ret ;
 }
 
+// Selectionne un utilisateur complet en fonction de son mail et mdp
+function select_user_complet_mail_mdp($conn,$mail,$mdp){
+    // on récupère le user
+    $user_tmp = select_user_mail_mdp($conn,$mail,$mdp);
+
+    // on récupère le role et l'id_user
+    $role=$user_tmp['role'];
+    $id_user=$user_tmp['id'];
+
+    // on récupère la version complète du user
+    if($role=="teacher"){ // ... le teacher
+        $user=select_teacher_id_user($conn,$id_user);
+    }elseif($role=="student"){ // ... le student
+        $user=select_student_id_user($conn,$id_user);
+    }elseif($role=="admin"){ // ... l'admin
+        $user=select_admin_id_user($conn,$id_user);
+    }
+
+    return $user;
+}
+
 
 
 // ---------- student ----------
