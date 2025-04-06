@@ -10,6 +10,7 @@ User :
             [mail] => mich.jack@mail.fr 
             [password] => azerty )
 - select_user($conn,$id) -> renvoie pareil à partir de l'id
+- select_user_complet_mail_mdp($conn,$mail,$mdp) -> renvoie le user complet à parir de son mail et mdp
 
 Student :
 

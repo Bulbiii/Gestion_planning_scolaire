@@ -10,25 +10,11 @@ if(isset($_POST['mail']) && isset($_POST['passwd'])){
     $mdp=$_POST['passwd'];
 
     // On récupère le user correspondant aux mail/mdp saisis
-    $user_temp = select_user_mail_mdp($conn,$mail,$mdp);
+	$user = select_user_complet_mail_mdp($conn,$mail,$mdp);
 
-    // On récupère ...
-	if(isset($user_temp)){
-
-		// on récupère le role et l'id_user
-        $role=$user_temp['role'];
-        $id_user=$user_temp['id'];
-
-        if($role=="teacher"){ // ... le teacher
-            $user=select_teacher_id_user($conn,$id_user);
-        }elseif($role=="student"){ // ... le student
-            $user=select_student_id_user($conn,$id_user);
-        }elseif($role=="admin"){ // ... l'admin
-            $user=select_admin_id_user($conn,$id_user);
-        }
-
-
-        $_SESSION["role"]=$role; // teacher / student / admin
+	if(isset($user)){
+		
+        $_SESSION["role"]=$user['role']; // teacher / student / admin
         $_SESSION["user"]=$user; // toutes les infos de la personne connectée
 		$_SESSION['id']=$user['id']; // l'id de la personne
 

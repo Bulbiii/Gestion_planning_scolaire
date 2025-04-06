@@ -13,8 +13,6 @@ function create_header(container){
 
     create_week_info_header(header);
 
-    create_week_info_header(header);
-
     create_user_info_header(header);
 
 }
@@ -71,5 +69,7 @@ function create_user_info_header(container){
     create_element("p", userInfoContainer, "nameInfoHeader", "Toto");
 
     // user's profil
-    create_element("p", userInfoContainer, "profilInfoHeader", "profil");
+    let boutonProfil = create_element("button",userInfoContainer,"profilInfoHeader","Profil");
+    boutonProfil.style.zIndex = "10"; 
+    boutonProfil.addEventListener("click", () => profil_vue());
 }

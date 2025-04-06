@@ -1,6 +1,10 @@
-function create_main_vue(){
+async function create_main_vue(){
     let body = document.querySelector("body");
     body.innerHTML = "";
+
+    const session = await get_session(); // récupère la session
+    let user = session['user']; // Le user
+    let role = session['role']; // le role du user (teacher/student/admin)
 
     create_header(body);
 
@@ -16,6 +20,7 @@ function create_main_vue(){
         create_admin_icons(main);
     }
 
+
     create_footer(body);
 }
 
@@ -30,6 +35,10 @@ function create_teacher_icons(container){
     createNoteIcon.src = "toto.png";
 
     create_class_select(buttonContainer);
+
+    // Temporaire !!!
+    let bouton_admin = create_element("button",buttonContainer,'',"Admin");
+    bouton_admin.addEventListener("click", () => create_user_vue());
 }
 
 

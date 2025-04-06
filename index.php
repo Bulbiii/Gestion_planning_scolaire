@@ -25,6 +25,8 @@ if(!isset($_SESSION['role'])){
 <script src="vue/footer.vue.js"></script>
 <script src="vue/timetable.vue.js"></script>
 <script src="vue/note.vue.js"></script>
+<script src="vue/profil.vue.js"></script>
+<script src="vue/create_user.vue.js"></script>
 
 <script>
     function start_web(){

@@ -33,7 +33,8 @@ function bouton_accueil(parent){
     let header = create_element("header", parent, "CreateHeader");
 
     let boutonAccueil = create_element("button", header, "homeButtonCreate","Accueil");
-    //boutonAccueil.addEventListener("click", () => create_main_vue()); // A décommenter
+    boutonAccueil.style.zIndex = "10"; 
+    boutonAccueil.addEventListener("click", () => create_main_vue() );
 }
 
 // Crée le formulaire pour les student
@@ -494,14 +495,6 @@ async function modify_teacher(id_teacher) {
             },
             body: JSON.stringify(teacher)   // Convertir l'objet en JSON
         });
-
-        // on récupère la réponse de la création du prof
-        /*const data = await res.json();
-        console.log("Création du professeur : ", data);
-
-        // on récupère le teacher et son id
-        const user_teacher = await get_teacher_mail_mdp(mail_teacher, mdp_teacher);
-        const id_teacher = user_teacher['id'];*/
 
         // On supprime les classes et matières actuelles
         await delete_all_class_teacher(id_teacher);
