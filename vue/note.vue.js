@@ -5,15 +5,27 @@ function create_note_view(_, note_obj=empty_note_obj, action="add"){
 
     home_button(container);
 
-    // Create inputs
-    let inputSection = create_element("section", container, "noteInputSection");
-    init_input_section(inputSection, note_obj, action);
+    axios.get("/info3/json/json.php", {
+        params : {
+            table : "user",
+            type : "byId",
+            id : userId
+        }
+    }).then(res => {
+        let userType = res.data.role;
 
+        if (userType == "teacher")
+        {
+            // Create inputs
+            let inputSection = create_element("section", container, "noteInputSection");
+            init_input_section(inputSection, note_obj, action);
+        }
 
-    // Contain created notes
-    let listSection = create_element("section", container, "noteListSection");
+        // Contain created notes
+        let listSection = create_element("section", container, "noteListSection");
 
-    create_note_list(listSection);
+        create_note_list(listSection, userType);
+    });
 }
 
 function home_button(container){
@@ -155,20 +167,20 @@ function add_note(){
         params : {
             table : "constraint",
             type : "insert",
-            day : "...",
+            day : "...", 
             date_start : fieldsData.startDate,
             date_end : fieldsData.endDate,
             h_start : fieldsData.startTime,
             h_end : fieldsData.endTime,
             desc : fieldsData.desc,
             recurrent : false,
-            id_teacher : 1
+            id_teacher : userTypeId
         }
     }).then(res => {
         if (res.data == "erreur"){
             console.log("Erreur lors de la sauvegarde de la contrainte");
         } else {
-            create_note_view(null);
+            create_note_view(null); // if the add button is available it means that the user is a teacher 
         }
     });
 }
@@ -189,18 +201,18 @@ function update_note(){
             h_end : fieldsData.endTime,
             desc : fieldsData.desc,
             recurrent : false,
-            id_teacher : 1
+            id_teacher : userTypeId
         }
     }).then(res => {
         if (res.data == "erreur"){
             console.log("Erreur lors de la sauvegarde de la contrainte");
         } else {
-            create_note_view(null);
+            create_note_view(null);// if the modify button is available it means that the user is a teacher
         }
     });
 }
 
-async function create_note_list(container){
+async function create_note_list(container, usertype){
     // note's table (contain a list of notes made by the teacher)
     let noteTable = create_element("table", container, "noteTable");
 
@@ -209,31 +221,52 @@ async function create_note_list(container){
 
     get_notes().then(notes => {
         // add table's content
-        add_note_table_content(noteTable, notes);
+        add_note_table_content(noteTable, notes, usertype);
     });
 }
 
-function create_note_header(container){
+function create_note_header(container, userType){
     let row = create_element("tr", container, "noteListHeader");
 
-    let headers = ["Date de début", "Date de fin", "Heure de début", "Heure de fin", "Modifier", "Supprimer"];
+    let headers;
+    if (userType = "teacher") {
+        headers = ["Date de début", "Date de fin", "Heure de début", "Heure de fin", "Modifier", "Supprimer"];
+    } else{
+        headers = ["Mail", "Date de début", "Date de fin", "Heure de début", "Heure de fin"];
+    }
+
     headers.forEach(header_title => {
         create_element("th", row, header_title + "HeaderNote", header_title);
     });
 }
 
 
-async function add_note_table_content(container, notes){
+async function add_note_table_content(container, notes, userType){
     notes.forEach(noteInfo => {
         let row = create_element("tr", container, "rowNote" + noteInfo["id"]);
         row.classList.add("noteRow");
         
-        add_note_row_content(row, noteInfo);
+        add_note_row_content(row, noteInfo, userType);
     });
 }
 
 
-function add_note_row_content(container, infos){
+function add_note_row_content(container, infos, userType){
+    if (userType == "admin"){
+        let mailCell = create_element("td", container, "", "mail");
+
+        axios.get("/info3/json/json.php", {
+            params : {
+                table : "user",
+                type : "byId",
+                id : infos["id"]
+            }
+        }).then(res => {
+            console.log(res);
+            mailCell.innerHTML = res.data["mail"];
+        });
+    }
+
     for (let info_type in infos) {
         if (info_type != "id") {
             let cell = create_element("td", container, "", infos[info_type]);
@@ -241,7 +274,9 @@ function add_note_row_content(container, infos){
         }
     }
 
-    add_note_list_action(container);
+    if (userType == "teacher"){
+        add_note_list_action(container);
+    }
 }
 
 function add_note_list_action(container){
@@ -281,7 +316,7 @@ function modify_note(){
         } else {
             let info = {id : res.data["id"], startDate : res.data["date_start"], endDate : res.data["date_end"], startTime : res.data["h_start"], endTime : res.data["h_end"], desc : res.data["description"]};
             
-            create_note_view(null, info, "update");
+            create_note_view(null, info, "update"); // if the modify button is available it means that the user is a teacher 
         }
     });
 }
@@ -302,30 +337,45 @@ function delete_note(){
         if (res.data == "erreur"){
             console.log("Erreur lors de l'importation des données");
         } else {
-            create_note_view(null);   
+            create_note_view(null);
         }
     });
 }
 
-async function get_notes(){
-    return await axios.get("/info3/json/json.php", {
-        params : {
+async function get_notes(userType){
+    let params;
+
+    if (userType == "admin"){
+        params = {
             table : "constraint",
             type : "all",
         }
+    } else {
+        params = {
+            table : "constraint",
+            type : "byTeacher",
+            id : userTypeId
+        }
+    }
+
+    let notes = await axios.get("/info3/json/json.php", {
+        params : params
     }).then(response => {
         let notes;
+
+        console.log(response.data);
         
+
         if (response.data == "erreur"){
             console.log("Erreur lors de l'importation des contraintes.");
             notes = empty_note_obj;
         } else {
-            console.log(response.data);
             notes = note_rs_to_info(response.data);
         }
         return notes;
     })
 
+    return notes;
     // return [{"id" : 1, "phoneNumber" : "01 02 03 04 05", "startDate" : "01-02-24", "startTime" : "08:00", "endDate" : "01-02-24", "endTime" : "10:00"},
     //      {"id" : 2, "phoneNumber" : "01 02 03 04 05", "startDate" : "01-02-24", "startTime" : "10:00", "endDate" : "01-02-24", "endTime" : "12:00"}];
 }
@@ -338,6 +388,15 @@ function note_rs_to_info(response){
         let info = {};
 
         for (key in obj) {
+            if (key == "id"){
+                axios.get("/info3/json/json.php", {
+                    params : {
+                        table : "teacher",
+                        
+                    }
+                })
+            }
+
             if (key in dbKeywordsDict) {
                 info[dbKeywordsDict[key]] = obj[key];
             }

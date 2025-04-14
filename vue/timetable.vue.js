@@ -61,20 +61,24 @@ function add_cells(grid){
             cell.style.gridRowStart = rowIndex + 2; /* start at 1 and index 1 = day */
 
             cell.classList.add("cell");
+            cell.classList.add("centerCell");
         }
     }
 }
 
 
-function add_courses(schedule){
+function add_courses(schedule, action_on_cell=select_course){
     for (const day in schedule) {
         for (const hour in schedule[day]){
+            let courseId = schedule[day][hour].id;
+            
             let cell = document.querySelector("#cell_"+day+"_"+(hour - 8)); //  hour start at 8 
             cell.disabled = false;
-            cell.addEventListener("click", select_course); // creating popup
 
-            cell.innerHTML = schedule[day][hour]; // course's name
+            cell.addEventListener("click", action_on_cell); // creating popup
 
+            cell.innerHTML = schedule[day][hour].title; // course's name
+            cell.value = courseId;
             cell.classList.add("courseCell"); // allowing to erase cells when updating tt
         }
     }
@@ -89,28 +93,47 @@ function select_course(){
     // course's informations popup
     let popup = create_element("article", tt, "popupArticle");
 
-    add_popup_content(popup, this.innerHTML);
+    add_popup_content(popup, this.value);
 
     let closePopupButton = create_element("button", popup, "closePopupButton", "X");
     closePopupButton.addEventListener("click", close_popup);
 }
 
 
-function add_popup_content(popup, courseTitle){
-    // course's title
-    let title = create_element("h2", popup, "popupTitle", courseTitle);
+function add_popup_content(popup, courseId){
+    let courseContent = axios.get("/info3/json/json.php", {
+        params : {
+            table : "courses",
+            type : "byId",
+            id : courseId
+        }
+    }).then( (e) => {
+        let courseTitle = e.data.subject.name;
+        let coursesDesc = "Description.";
 
-    let popupContent = create_element("div", popup, "popupContent");
+        let startTime = e.data.h_start.slice(0, -3);
+        let endTime = e.data.h_end.slice(0, -3);
 
-    // course's description
-    let desc = create_element("p", popupContent, "popupDesc", "Texte temporaire très intéressant");
+        let courseRoom = e.data.classroom.num;
 
-    // start and end hour
-    let startHour = create_element("p", popupContent, "popupStartHour", "Heure départ : 8h00");
-    let endHour = create_element("p", popupContent, "popupEndHour", "Heure de fin : 9h00");
+        // course's title
+        let title = create_element("h2", popup, "popupTitle", courseTitle);
+        
+        let popupContent = create_element("div", popup, "popupContent");
+        
+        // course's description
+        // let desc = create_element("p", popupContent, "popupTeacher", coursesDesc);
 
-    // course's room
-    let room = create_element("p", popupContent, "popupRoom", "Salle : 8C");
+        // if teacher -> show class id; if student -> show teacher's name; if admin -> teacher + class
+
+        // start and end hour
+        let startHour = create_element("p", popupContent, "popupStartHour", "Heure départ : " + startTime);
+        let endHour = create_element("p", popupContent, "popupEndHour", "Heure de fin : " + endTime);
+        
+        // course's room
+        let room = create_element("p", popupContent, "popupRoom", "Salle : " + courseRoom);
+    }
+    );
 }
 
 
@@ -135,12 +158,26 @@ function update_tt(){
         cell.innerHTML = ""; // remove content
     });
     
+    
     get_courses().then(schedule => {
         add_courses(schedule); // add courses in empty cells
-    })
-
+    });
+    
     let body = document.querySelector("body");
-    create_header(body);
+    
+    axios.get("/info3/json/json.php", {
+        params : {
+            table : "user",
+            type : "byId",
+            id : userId
+        }
+    }).then(res => {
+        let role = res.data["role"];
+        
+        get_classes_name(role).then( classes => {
+            create_header(body, classes);
+        })
+    });
 }
 
 async function get_courses(){
@@ -148,13 +185,12 @@ async function get_courses(){
     let id = currentClass;
 
     let dates = get_week_dates();
-    
 
     let res = axios.get("/info3/json/json.php", {
         params : {
             table : "courses",
             type : "week",  
-            id : "4A",
+            id : id,
             start : dates.start,
             end : dates.end
         }
@@ -185,7 +221,8 @@ function get_week_dates(){
         let startDay = currentDate.getDate() - (currentDate.getDay() - 1 % 7); // -1 because getDay starts on Sunday
         
         startDate = new Date(currentDate.setDate(startDay));
-        endDate = new Date(currentDate.setDate(startDay + 4));
+        endDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 4);
+        
     } else {
         let weekNumber = weekNumberElement.value;
         
@@ -195,10 +232,10 @@ function get_week_dates(){
         let year = new Date().getFullYear();
         
         // Start date
-        startDate = new Date(year, 1, dayNumber) // will correct date
+        startDate = new Date(year, 0, dayNumber) // will correct date
         
         // End date
-        endDate = new Date(year, 1, dayNumber + 4) // + 4 to have friday
+        endDate = new Date(year, 0, dayNumber + 4) // + 4 to have friday
     }
 
     // Start and end date display
@@ -256,10 +293,10 @@ function rs_to_schedule(res){
         let frenchDay = toFrenchDay[courseDB.day];
 
         if (frenchDay in coursesWeek){
-            coursesWeek[frenchDay][startTime] = courseDB.subject.name;
+            coursesWeek[frenchDay][startTime] = {title: courseDB.subject.name, id: courseDB.id};
         } else {
             coursesWeek[frenchDay] = {};
-            coursesWeek[frenchDay][startTime] = courseDB.subject.name;
+            coursesWeek[frenchDay][startTime] = {title: courseDB.subject.name, id: courseDB.id};
         }
     });
 

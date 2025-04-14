@@ -41,11 +41,11 @@ function create_current_week_entry(container){
         if (isNumberKey){
             let lastVal = e.target.value;
 
-            isBetween_1_50 = (lastVal + e.key < 50 && lastVal + e.key > 0); // check if new value is between 1 and 50 included
+            isBetween_1_50 = (lastVal + e.key < 53 && lastVal + e.key > 0); // check if new value is between 1 and 52 included
         }
 
 
-        let isOk = isActionKey || e.ctrlKey || (isNumberKey && isBetween_1_50); // correct key
+        let isOk = isActionKey || (e.ctrlKey && e.keyCode == 65) || (isNumberKey && isBetween_1_50); // correct key (65 = A)
         
 
         return isOk; // allow input change if key is ok
@@ -68,9 +68,10 @@ function changeWeek(){
 
     if (this.id == "previousWeekButton" && currentWeekEntry.value > 1){ // check if the left button was pressed and if the value is greater than 1 (to avoid value 0)
         currentWeekEntry.value -= 1;
-    } else if (this.id == "nextWeekButton" && currentWeekEntry.value < 50){ // same for right button and 50
+    } else if (this.id == "nextWeekButton" && currentWeekEntry.value < 53){ // same for right button and 50
         currentWeekEntry.value = Number(currentWeekEntry.value) + 1;
     }
     
     update_tt(currentWeekEntry.value);
 }
+

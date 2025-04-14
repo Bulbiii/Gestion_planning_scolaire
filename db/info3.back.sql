@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.4deb2+deb11u1
+-- version 5.0.4deb2+deb11u2
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 10, 2025 at 09:25 AM
+-- Generation Time: Apr 14, 2025 at 05:16 PM
 -- Server version: 10.5.28-MariaDB-0+deb11u1
 -- PHP Version: 7.4.33
 
@@ -39,7 +39,8 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id`, `name`, `surname`, `user_id`) VALUES
-(1, 'Ludovic', 'Herve', 16);
+(1, 'Ludovic', 'Herve', 16),
+(20, 'Marc', 'Lefevre', 65);
 
 -- --------------------------------------------------------
 
@@ -76,7 +77,7 @@ CREATE TABLE `classroom` (
 --
 
 INSERT INTO `classroom` (`num`, `specificity`) VALUES
-(1, 'math'),
+(1, 'MATH'),
 (2, 'INFO'),
 (205, 'INFO');
 
@@ -109,7 +110,8 @@ INSERT INTO `class_teacher` (`teacher_id`, `class_name`) VALUES
 CREATE TABLE `constraint` (
   `id` int(11) NOT NULL,
   `day` varchar(100) NOT NULL,
-  `date` date NOT NULL,
+  `date_start` date NOT NULL,
+  `date_end` date NOT NULL,
   `h_start` time NOT NULL,
   `h_end` time NOT NULL,
   `description` text NOT NULL,
@@ -121,10 +123,13 @@ CREATE TABLE `constraint` (
 -- Dumping data for table `constraint`
 --
 
-INSERT INTO `constraint` (`id`, `day`, `date`, `h_start`, `h_end`, `description`, `recurrent`, `id_teacher`) VALUES
-(1, 'Lundi', '2025-02-04', '08:00:00', '15:00:00', 'Piscine', 0, 1),
-(3, 'Mercredi', '2025-01-12', '08:00:00', '10:00:00', 'Grasse matiné', 0, 1),
-(5, 'Samedi', '2025-02-15', '08:00:00', '09:30:00', 'poney', 1, 1);
+INSERT INTO `constraint` (`id`, `day`, `date_start`, `date_end`, `h_start`, `h_end`, `description`, `recurrent`, `id_teacher`) VALUES
+(1, 'Lundi', '2025-02-04', '2025-02-04', '08:00:00', '15:00:00', 'Piscine', 0, 1),
+(3, 'Mercredi', '2025-01-12', '2025-01-14', '08:00:00', '10:00:00', 'Grasse matiné', 0, 1),
+(13, '...', '2025-03-10', '2025-03-11', '09:00:00', '00:30:00', '', 0, 1),
+(14, 'monday', '2025-03-10', '2025-03-10', '08:00:00', '10:00:00', '..', 1, 2),
+(24, '...', '2025-03-10', '2025-03-11', '08:00:00', '00:30:00', 'coucou', 0, 1),
+(37, '...', '2025-11-01', '2025-11-01', '08:00:00', '10:00:00', 'toto', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -150,10 +155,11 @@ CREATE TABLE `courses` (
 --
 
 INSERT INTO `courses` (`id`, `day`, `date`, `recurrent`, `h_start`, `h_end`, `subject_id`, `teacher_id`, `class_name`, `classroom_num`) VALUES
-(1, 'monday', '2025-02-11', 1, '08:00:00', '10:00:00', 1, 1, '3C', 1),
-(3, 'monday', '2025-02-15', 1, '14:00:00', '15:00:00', 4, 1, '4A', 205),
-(4, 'tuesday', '2025-02-16', 0, '10:00:00', '11:30:00', 4, 2, '3C', 205),
-(5, 'friday', '2025-02-21', 0, '14:00:00', '16:30:00', 4, 1, '3C', 1);
+(1, 'friday', '2025-02-11', 1, '08:00:00', '11:00:00', 1, 1, '3C', 1),
+(3, 'monday', '2025-02-15', 0, '14:00:00', '15:00:00', 4, 1, '4A', 205),
+(4, 'thursday', '2025-02-16', 0, '10:00:00', '11:30:00', 4, 2, '3C', 205),
+(5, 'friday', '2025-03-10', 1, '14:00:00', '15:00:00', 1, 2, '3C', 205),
+(21, 'monday', '2025-08-04', 0, '08:00:00', '10:00:00', 1, 1, '4A', 1);
 
 -- --------------------------------------------------------
 
@@ -174,7 +180,8 @@ CREATE TABLE `student` (
 --
 
 INSERT INTO `student` (`id`, `name`, `surname`, `user_id`, `class_name`) VALUES
-(7, 'Jean', 'Dupont', 10, '3C');
+(7, 'Jean', 'Dupont', 10, '3C'),
+(19, 'Lou', 'Lorville', 75, '4A');
 
 -- --------------------------------------------------------
 
@@ -197,7 +204,8 @@ INSERT INTO `subject` (`id`, `name`, `nb_hours`, `specificity`) VALUES
 (1, 'Math', '00:00:02', ''),
 (2, 'Info', '00:01:28', 'INFO'),
 (3, 'Sport', '00:00:12', 'Gymnase'),
-(4, 'Français', '00:00:01', '');
+(4, 'Français', '00:00:01', ''),
+(7, 'Informatique', '04:00:00', 'INFO');
 
 -- --------------------------------------------------------
 
@@ -218,7 +226,7 @@ CREATE TABLE `teacher` (
 
 INSERT INTO `teacher` (`id`, `name`, `surname`, `id_user`) VALUES
 (1, 'Michel', 'Jackson', 2),
-(2, 'Charles', 'Riviere', 13);
+(2, 'Riviere', 'Charles', 13);
 
 -- --------------------------------------------------------
 
@@ -261,7 +269,9 @@ INSERT INTO `user` (`id`, `role`, `mail`, `password`) VALUES
 (2, 'teacher', 'mich.jack@mail.fr', 'azerty'),
 (10, 'student', 'jeandu93@mail.fr', 'password'),
 (13, 'teacher', 'ruisseau@mail.fr', 'motdepasse'),
-(16, 'admin', 'ludo.herve@mail.fr', 'aaaaa');
+(16, 'admin', 'ludo.herve@mail.com', 'aaaaa'),
+(65, 'admin', 'marc.lefevre@mail.fr', 'lelele'),
+(75, 'student', 'LL@mail.fr', 'lolo');
 
 --
 -- Indexes for dumped tables
@@ -352,43 +362,43 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `constraint`
 --
 ALTER TABLE `constraint`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `student`
 --
 ALTER TABLE `student`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `subject`
 --
 ALTER TABLE `subject`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `teacher`
 --
 ALTER TABLE `teacher`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
 
 --
 -- Constraints for dumped tables

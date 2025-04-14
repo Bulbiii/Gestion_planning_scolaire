@@ -17,6 +17,7 @@ if(!isset($_SESSION['role'])){
 
 <script src="lib/vars.lib.js"></script>
 <script src="vue/lib.vue.js"></script> 
+<script src="lib/gen_edt/gen_edt.js"></script>
 
 <script src="lib/axios.min.js"></script>
 
@@ -25,8 +26,24 @@ if(!isset($_SESSION['role'])){
 <script src="vue/footer.vue.js"></script>
 <script src="vue/timetable.vue.js"></script>
 <script src="vue/note.vue.js"></script>
+<script src="vue/generate.vue.js"></script>
+<script src="vue/profil.vue.js"></script>
+<script src="vue/create_user.vue.js"></script>
 
 <script>
+    <?php 
+    $userId;
+    if (isset($_SESSION["user"]["user_id"])){
+        $userId = $_SESSION["user"]["user_id"];
+    } else {
+        $userId = $_SESSION["user"]["id_user"];
+    }
+    
+    echo("const userId = " . $userId . ";");
+    echo("const userTypeId = " . $_SESSION["id"] . ";");
+
+    ?>
+
     function start_web(){
         create_main_vue();
     }

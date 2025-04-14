@@ -1,4 +1,4 @@
-function create_header(container){
+function create_header(container, classes){
     let header = document.querySelector("#mainFrameHeader");
 
     if (header == null){
@@ -13,16 +13,19 @@ function create_header(container){
 
     create_week_info_header(header);
 
-    create_week_info_header(header);
+    create_user_info_header(header, classes);
 
-    create_user_info_header(header);
+}
 
+function change_theme(){
+    let a = 1;
 }
 
 
 function create_theme_changer_header(container){
     let themeChangerButton = create_element("button", container, "themeChangerHeader");
-    
+    themeChangerButton.onclick = change_theme;
+
     let themeChangerIcon = create_element("img", themeChangerButton, "themeChangerIcon");
     themeChangerIcon.src ="toto.png";
 }
@@ -60,16 +63,18 @@ function create_week_info_header(container){
 
 
 
-function create_user_info_header(container){
+function create_user_info_header(container, classes){
     // contain user's info
     let userInfoContainer = create_element("div", container, "userInfoContainer");
 
     // user's class
-    create_element("p", userInfoContainer, "classInfoHeader", "4B");
+    create_element("p", userInfoContainer, "classInfoHeader", get_class_name(classes));
 
     // user's name
     create_element("p", userInfoContainer, "nameInfoHeader", "Toto");
 
     // user's profil
-    create_element("p", userInfoContainer, "profilInfoHeader", "profil");
+    let boutonProfil = create_element("button",userInfoContainer,"profilInfoHeader","Profil");
+    boutonProfil.style.zIndex = "10"; 
+    boutonProfil.addEventListener("click", () => profil_vue());
 }
