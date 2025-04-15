@@ -13,13 +13,13 @@ function create_header(container, classes){
 
     create_week_info_header(header);
 
+<<<<<<< HEAD
     create_user_info_header(header, classes);
 
 }
-
-function change_theme(){
-    let a = 1;
-}
+=======
+    create_user_info_header(header);
+>>>>>>> 69d7f64ecb2e39623dc9414f0d1e472779ed4a05
 
 function change_theme(){
     let a = 1;
@@ -78,9 +78,6 @@ function create_user_info_header(container, classes){
     create_element("p", userInfoContainer, "nameInfoHeader", "Toto");
 
     // user's profil
-    let boutonProfil = create_element("button",userInfoContainer,"profilInfoHeader","Profil");
-    boutonProfil.style.zIndex = "10"; 
-    boutonProfil.addEventListener("click", () => profil_vue());
     let boutonProfil = create_element("button",userInfoContainer,"profilInfoHeader","Profil");
     boutonProfil.style.zIndex = "10"; 
     boutonProfil.addEventListener("click", () => profil_vue());
