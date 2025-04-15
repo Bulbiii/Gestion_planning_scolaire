@@ -51,6 +51,10 @@ function create_current_week_entry(container){
         return isOk; // allow input change if key is ok
     };
 
+    currentWeekEntry.onpaste = function (e) {
+        e.preventDefault();
+    }
+
 
 
     // update tt if input has changed and if it's not empty
