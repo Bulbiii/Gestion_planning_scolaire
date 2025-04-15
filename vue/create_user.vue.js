@@ -353,7 +353,7 @@ function delete_user(id_user,role_user) {
     })
     .then(res => res.json())
     .then(data => { // quand la suppression est terminée, on fait la suite
-        console.log("Suppression du user : ", data);
+        //console.log("Suppression du user : ", data);
         // raffraichissement de la page
         switch(role_user) {
             case 'admin':
@@ -387,7 +387,7 @@ async function delete_all_class_teacher(id_teacher){
         body: JSON.stringify(info_add)   // Convertir l'objet en JSON
     })
     .then(res => res.json())
-    .then(data => console.log("Suppression des classes d'un prof : ",data))
+    //.then(data => console.log("Suppression des classes d'un prof : ",data))
     .catch(error => console.error('Erreur:',error));
 }
 
@@ -408,7 +408,7 @@ async function delete_all_teacher_subject(teacher_id){
         body: JSON.stringify(info_add)   // Convertir l'objet en JSON
     })
     .then(res => res.json())
-    .then(data => console.log("Suppression des matières d'un prof : ",data))
+    //.then(data => console.log("Suppression des matières d'un prof : ",data))
     .catch(error => console.error('Erreur:',error));
 }
 
@@ -437,7 +437,7 @@ function modify_admin(id_admin){
     })
     .then(res => res.json())
     .then(data => {
-        console.log("Modification de l'admin : ",data);
+        //console.log("Modification de l'admin : ",data);
         creation_form_admin(document.querySelector("#createInputSection"));
     })
     .catch(error => console.error('Erreur:',error));
@@ -465,7 +465,7 @@ function modify_student(id_student){
     })
     .then(res => res.json())
     .then(data => {
-        console.log("Modification de l'étudiant : ",data);
+        //console.log("Modification de l'étudiant : ",data);
         creation_form_student(document.querySelector("#createInputSection"));
     })
     .catch(error => console.error('Erreur:',error));
@@ -541,7 +541,7 @@ function add_admin(){
     })
     .then(res => res.json())
     .then(data => {
-        console.log("Création de l'utilisateur : ",data);
+        //console.log("Création de l'utilisateur : ",data);
         creation_form_admin(document.querySelector("#createInputSection"));
     })
     .catch(error => console.error('Erreur:',error));
@@ -568,7 +568,7 @@ function add_student(){
     })
     .then(res => res.json())
     .then(data => {
-        console.log("Création de l'étudiant : ",data);
+        //console.log("Création de l'étudiant : ",data);
         creation_form_student(document.querySelector("#createInputSection"));
     })
     .catch(error => console.error('Erreur:',error));
@@ -600,7 +600,7 @@ async function add_teacher() {
 
         // on récupère la réponse de la création du prof
         const data = await res.json();
-        console.log("Création du professeur : ", data);
+        //console.log("Création du professeur : ", data);
 
         // on récupère le teacher et son id
         const user_teacher = await get_teacher_mail_mdp(mail_teacher, mdp_teacher);
@@ -639,7 +639,7 @@ function add_class_teacher(class_name, id_teacher){
         body: JSON.stringify(info_add)   // Convertir l'objet en JSON
     })
     .then(res => res.json())
-    .then(data => console.log("Ajout de la classe d'un prof : ",data))
+    //.then(data => console.log("Ajout de la classe d'un prof : ",data))
     .catch(error => console.error('Erreur:',error));
 }
 
@@ -661,7 +661,7 @@ function add_teacher_subject(id_subject, teacher_id){
         body: JSON.stringify(info_add)   // Convertir l'objet en JSON
     })
     .then(res => res.json())
-    .then(data => console.log("Ajout de la matière d'un prof : ",data))
+    //.then(data => console.log("Ajout de la matière d'un prof : ",data))
     .catch(error => console.error('Erreur:',error));
 }
 
@@ -751,7 +751,8 @@ function add_user_list_action(parent,user){
 
     // Modifier
     let modifyCell = create_element("td", parent, "");
-    let modifyButton = create_element("button", modifyCell, "","Modifier");
+    let modifyButton = create_element("button", modifyCell, "");
+
     switch(role_user){
         case 'admin':
             modifyButton.addEventListener("click", () => creation_form_admin(document.querySelector("#createInputSection"),'put',user));
@@ -767,9 +768,15 @@ function add_user_list_action(parent,user){
             break;
     }
 
+    let modifyIcon = create_element("img", modifyButton);
+    modifyIcon.src = "/info3/vue/style/img/crayon-de-couleur.png";
+
+
     // Supprimer
     let deleteCell = create_element("td", parent, "");
-    let deleteButton = create_element("button", deleteCell, "","Supprimer");
+    let deleteButton = create_element("button", deleteCell, "");
     deleteButton.addEventListener("click", () => delete_user(id_user,role_user));
 
+    let deleteIcon = create_element("img",deleteButton);
+    deleteIcon.src = "/info3/vue/style/img/fermer.png";
 }
