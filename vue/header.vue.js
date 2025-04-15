@@ -13,13 +13,9 @@ function create_header(container, classes){
 
     create_week_info_header(header);
 
-<<<<<<< HEAD
     create_user_info_header(header, classes);
 
 }
-=======
-    create_user_info_header(header);
->>>>>>> 69d7f64ecb2e39623dc9414f0d1e472779ed4a05
 
 function change_theme(){
     let a = 1;
