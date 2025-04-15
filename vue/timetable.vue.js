@@ -181,30 +181,44 @@ function update_tt(){
 }
 
 async function get_courses(){
-    // class name
-    let id = currentClass;
-
-    let dates = get_week_dates();
-
     let res = axios.get("/info3/json/json.php", {
         params : {
-            table : "courses",
-            type : "week",  
-            id : id,
-            start : dates.start,
-            end : dates.end
+            table : "user",
+            type : "byId",
+            id : userId
         }
     }).then(res => {
-        let result;
-        if (res.data == "erreur"){
-            console.log("Erreur lors de l'importation des données");
-        } else {
-            result = rs_to_schedule(res.data);
+    
+        let role = res.data["role"];
+        
+        let result = get_classes_name(role).then(classes => {
+
+            let id = get_class_name(classes);
+            let dates = get_week_dates();
             
-        }
+            let res = axios.get("/info3/json/json.php", {
+                params : {
+                    table : "courses",
+                    type : "week",  
+                    id : id,
+                    start : dates.start,
+                    end : dates.end
+                }
+            }).then(res => {
+                let result;
+                if (res.data == "erreur"){
+                    console.log("Erreur lors de l'importation des données");
+                } else {
+                    result = rs_to_schedule(res.data);
+                }
+                return result;
+            });
+            
+            return res;
+        });
+
         return result;
     });
-
     return res;
 }
 

@@ -219,7 +219,7 @@ async function create_note_list(container, usertype){
     // create table's headers
     create_note_header(noteTable, usertype);
 
-    get_notes().then(notes => {
+    get_notes(usertype).then(notes => {
         // add table's content
         add_note_table_content(noteTable, notes, usertype);
     });
@@ -229,7 +229,6 @@ function create_note_header(container, userType){
     let row = create_element("tr", container, "noteListHeader");
 
     let headers;
-    console.log(userType);
     
     if (userType == "teacher") {
         headers = ["Date de début", "Date de fin", "Heure de début", "Heure de fin", "Modifier", "Supprimer"];
@@ -256,20 +255,30 @@ async function add_note_table_content(container, notes, userType){
 function add_note_row_content(container, infos, userType){
     if (userType == "admin"){
         let mailCell = create_element("td", container, "", "mail");
-        mailCell.innerHTML = "toto@mail.fr";
-        // axios.get("/info3/json/json.php", {
-        //     params : {
-        //         table : "user",
-        //         type : "byId",
-        //         id : infos["id"]
-        //     }
-        // }).then(res => {
-        //     mailCell.innerHTML = res.data["mail"];
-        // });
+        console.log(infos["teacherId"]);
+        
+
+        axios.get("/info3/json/json.php", {
+            params : {
+                table : "teacher",
+                type : "byId",
+                id : infos["teacherId"]
+            }
+        }).then(res => {
+            axios.get("/info3/json/json.php", {
+                params : {
+                    table : "user",
+                    type : "byId",
+                    id : res.data["id_user"]
+                }
+            }).then(res => {
+                mailCell.innerHTML = res.data["mail"];
+            })
+        });
     }
 
     for (let info_type in infos) {
-        if (info_type != "id") {
+        if (info_type != "id" && info_type != "teacherId") {
             let cell = create_element("td", container, "", infos[info_type]);
             cell.classList.add(info_type + "CellNote");
         }
@@ -364,13 +373,12 @@ async function get_notes(userType){
     }).then(response => {
         let notes;
 
-        console.log(response.data);
-        
-
         if (response.data == "erreur"){
             console.log("Erreur lors de l'importation des contraintes.");
             notes = empty_note_obj;
         } else {
+            console.log(response.data);
+            
             notes = note_rs_to_info(response.data);
         }
         return notes;
@@ -389,15 +397,6 @@ function note_rs_to_info(response){
         let info = {};
 
         for (key in obj) {
-            if (key == "id"){
-                axios.get("/info3/json/json.php", {
-                    params : {
-                        table : "teacher",
-                        
-                    }
-                })
-            }
-
             if (key in dbKeywordsDict) {
                 info[dbKeywordsDict[key]] = obj[key];
             }

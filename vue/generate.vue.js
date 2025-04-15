@@ -2,11 +2,22 @@ function create_generate_tt_view(){
     let container = document.querySelector("body");
     container.innerHTML = "";
 
+    create_generate_header(container);
+
     create_tt(container);
 
     create_generate_footer(container);
 }
 
+function create_generate_header(container){
+    let header = create_element("header", container, "generateHeader");
+
+    let homeButton = create_element("button", header, "homeButtonHeader");
+    homeButton.onclick = create_main_vue;
+
+    let homeIcon = create_element("img", homeButton, "homeButtonIconHeader");
+    homeIcon.src = "/info3/vue/style/img/maison.png";
+}
 
 function create_generate_footer(container){
     let footer = create_element("footer", container, "generateFooter");

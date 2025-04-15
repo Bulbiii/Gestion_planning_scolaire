@@ -27,9 +27,11 @@ function create_header(container, classes){
         header.innerHTML = "";
     }
 
-    create_theme_changer_header(header);
+    let leftHeaderContainer = create_element("div", header, "leftHeaderContainer");
 
-    create_date_info_header(header);
+    create_theme_changer_header(leftHeaderContainer);
+
+    create_date_info_header(leftHeaderContainer);
 
     create_week_info_header(header);
 
@@ -214,7 +216,10 @@ function create_user_info_header(container, classes){
     create_element("p", userInfoContainer, "classInfoHeader", get_class_name(classes));
 
     // user's name
-    create_element("p", userInfoContainer, "nameInfoHeader", "Toto");
+    let user_name = create_element("p", userInfoContainer, "nameInfoHeader");
+    get_user_name().then(name => {
+        user_name.innerHTML = name;
+    });
 
     // user's profil
     let boutonProfil = create_element("button",userInfoContainer,"profilInfoHeader","Profil");

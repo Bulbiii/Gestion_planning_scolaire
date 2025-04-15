@@ -7,15 +7,11 @@ function create_main_vue(){
             id : userId
         }
     }).then(res => {
-    
+        
         let role = res.data["role"];
         
         get_classes_name(role).then(classes => {
-            console.log("toto");
-            
             console.log(classes);
-            
-        
             let body = document.querySelector("body");
             body.innerHTML = "";
 
@@ -24,13 +20,13 @@ function create_main_vue(){
             let main = create_element("main", body, "");
             
             create_tt(main);
+            update_tt();
             
             if (role == "teacher"){
                 create_teacher_icons(main, classes);      
             } else if (role == "admin"){
                 create_admin_icons(main, classes);
             }
-            
             
             create_footer(body);
         });
@@ -79,10 +75,6 @@ async function get_classes_name(role) {
         params : params
     }).then( res => {
         let class_list = [];
-
-        console.log(res.data);
-        
-
         if (role == "student"){
             class_list = [res.data.class_name];
             
@@ -109,8 +101,36 @@ function get_class_name(classes){
     if (classOption == null){
         className = classes[0];
     } else {
-        className = classOption.value;
+        className = classOption.value;   
     }
+
+    return className;
+}
+
+async function get_user_name(){
+    let name = axios.get("/info3/json/json.php", {
+        params : {
+            table : "user",
+            type : "byId",
+            id : userId,
+        }
+    }).then(res => {
+        let role = res.data["role"];
+
+        let name = axios.get("/info3/json/json.php", {
+            params : {
+                table : role,
+                type : "byId",
+                id : userTypeId
+            }
+        }).then(res => {
+            return res.data["name"] + " " + res.data["surname"];
+        });
+
+        return name;
+    });
+
+    return name;
 }
 
 function create_class_select(container, classes){
@@ -134,14 +154,14 @@ function create_class_select(container, classes){
 
 function create_admin_icons(container, classes){
     create_teacher_icons(container, classes);
+    
+    let buttonContainer = document.querySelector("#buttonMainSection");
 
-    let generateButton = create_element("button", container, "generateButtonMain");
+    let generateButton = create_element("button", buttonContainer, "generateButtonMain");
     generateButton.onclick = create_generate_tt_view;
     
     let generateIcon = create_element("img", generateButton, "generateIconMain");
     generateIcon.src = "/info3/vue/style/img/chargement.png";
-
-    let buttonContainer = document.querySelector("#buttonMainSection");
 
     // Temporaire !!!
     let bouton_admin = create_element("button",buttonContainer,'',"Admin");
