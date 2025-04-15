@@ -11,7 +11,6 @@ function create_main_vue(){
         let role = res.data["role"];
         
         get_classes_name(role).then(classes => {
-            console.log(classes);
             let body = document.querySelector("body");
             body.innerHTML = "";
 

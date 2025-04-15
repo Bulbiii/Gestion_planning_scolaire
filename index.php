@@ -13,6 +13,7 @@ if(!isset($_SESSION['role'])){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="vue/style/style.css">
     <title>Projet EDT</title>
+    <link rel="icon" type="image/x-icon" href="vue/style/img/windowIcon.png">
 </head>
 
 <script src="lib/vars.lib.js"></script>

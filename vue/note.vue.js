@@ -255,7 +255,6 @@ async function add_note_table_content(container, notes, userType){
 function add_note_row_content(container, infos, userType){
     if (userType == "admin"){
         let mailCell = create_element("td", container, "", "mail");
-        console.log(infos["teacherId"]);
         
 
         axios.get("/info3/json/json.php", {
@@ -377,8 +376,6 @@ async function get_notes(userType){
             console.log("Erreur lors de l'importation des contraintes.");
             notes = empty_note_obj;
         } else {
-            console.log(response.data);
-            
             notes = note_rs_to_info(response.data);
         }
         return notes;
