@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 function create_main_vue(){
     
     axios.get("/info3/json/json.php", {
@@ -36,34 +35,8 @@ function create_main_vue(){
             create_footer(body);
         });
     });
-=======
-async function create_main_vue(){
-    let body = document.querySelector("body");
-    body.innerHTML = "";
-
-    const session = await get_session(); // récupère la session
-    let user = session['user']; // Le user
-    let role = session['role']; // le role du user (teacher/student/admin)
-
-    create_header(body);
->>>>>>> 69d7f64ecb2e39623dc9414f0d1e472779ed4a05
 
 
-<<<<<<< HEAD
-=======
-    create_tt(main);
-
-    let user_type = "prof";
-
-    if (user_type == "prof"){
-        create_teacher_icons(main);      
-    } else if (user_type == "admin"){
-        create_admin_icons(main);
-    }
-
-
-    create_footer(body);
->>>>>>> 69d7f64ecb2e39623dc9414f0d1e472779ed4a05
 }
 
 
@@ -76,15 +49,7 @@ function create_teacher_icons(container, classes){
     let createNoteIcon = create_element("img", createNoteVueButton, "createNoteIcon");
     createNoteIcon.src = "toto.png";
 
-<<<<<<< HEAD
     create_class_select(buttonContainer, classes);
-=======
-    create_class_select(buttonContainer);
-
-    // Temporaire !!!
-    let bouton_admin = create_element("button",buttonContainer,'',"Admin");
-    bouton_admin.addEventListener("click", () => create_user_vue());
->>>>>>> 69d7f64ecb2e39623dc9414f0d1e472779ed4a05
 }
 
 
