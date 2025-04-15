@@ -35,7 +35,7 @@ function home_button(container){
     homeButton.onclick = create_main_vue;
 
     let homeIcon = create_element("img", homeButton, "homeButtonIconNote");
-    homeIcon.src = "toto.png";
+    homeIcon.src = "/info3/vue/style/img/maison.png";
 }
 
 
@@ -217,7 +217,7 @@ async function create_note_list(container, usertype){
     let noteTable = create_element("table", container, "noteTable");
 
     // create table's headers
-    create_note_header(noteTable);
+    create_note_header(noteTable, usertype);
 
     get_notes().then(notes => {
         // add table's content
@@ -229,7 +229,9 @@ function create_note_header(container, userType){
     let row = create_element("tr", container, "noteListHeader");
 
     let headers;
-    if (userType = "teacher") {
+    console.log(userType);
+    
+    if (userType == "teacher") {
         headers = ["Date de début", "Date de fin", "Heure de début", "Heure de fin", "Modifier", "Supprimer"];
     } else{
         headers = ["Mail", "Date de début", "Date de fin", "Heure de début", "Heure de fin"];
@@ -254,17 +256,16 @@ async function add_note_table_content(container, notes, userType){
 function add_note_row_content(container, infos, userType){
     if (userType == "admin"){
         let mailCell = create_element("td", container, "", "mail");
-
-        axios.get("/info3/json/json.php", {
-            params : {
-                table : "user",
-                type : "byId",
-                id : infos["id"]
-            }
-        }).then(res => {
-            console.log(res);
-            mailCell.innerHTML = res.data["mail"];
-        });
+        mailCell.innerHTML = "toto@mail.fr";
+        // axios.get("/info3/json/json.php", {
+        //     params : {
+        //         table : "user",
+        //         type : "byId",
+        //         id : infos["id"]
+        //     }
+        // }).then(res => {
+        //     mailCell.innerHTML = res.data["mail"];
+        // });
     }
 
     for (let info_type in infos) {
@@ -287,7 +288,7 @@ function add_note_list_action(container){
     modifyButton.onclick = modify_note;
 
     let modifyIcon = create_element("img", modifyButton);
-    modifyIcon.src = "toto.png";
+    modifyIcon.src = "/info3/vue/style/img/crayon-de-couleur.png";
 
 
     let deleteCell = create_element("td", container, "");
@@ -297,7 +298,7 @@ function add_note_list_action(container){
     deleteButton.onclick = delete_note;
 
     let deleteIcon = create_element("img", deleteButton);
-    deleteIcon.src = "toto.png";
+    deleteIcon.src = "/info3/vue/style/img/fermer.png";
 }
 
 function modify_note(){

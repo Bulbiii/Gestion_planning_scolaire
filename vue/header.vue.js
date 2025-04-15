@@ -1,3 +1,23 @@
+window.addEventListener("load", _ => {
+    theme_startup();
+})
+
+function theme_startup(){
+    const savedTheme = localStorage.getItem("theme");
+
+
+
+    if (savedTheme === "dark" || savedTheme === "light") {
+        document.body.classList.add(savedTheme);
+    } else {
+        // Thème par défaut si rien de sauvegardé
+
+        document.body.classList.add("dark"); // ou "light", selon ta préférence
+
+        localStorage.setItem("theme", "dark");
+    }
+}
+
 function create_header(container, classes){
     let header = document.querySelector("#mainFrameHeader");
 
@@ -17,19 +37,142 @@ function create_header(container, classes){
 
 }
 
+function create_theme_changer_header(container) {
+
+
+
+    let div = create_element("div", container, "themeContainer");
+
+
+    div.className = "containerrrs"; 
+
+
+
+
+
+    let label = create_element("label", div, "themeSwitchLabel");
+
+
+    label.className = "switch"; 
+
+
+
+
+
+    let input = document.createElement("input");
+
+
+    input.type = "checkbox";
+
+
+    input.id = "toggle";
+
+
+    label.appendChild(input);
+
+
+
+
+
+    let span = document.createElement("span");
+
+
+    span.className = "slider";
+
+
+    label.appendChild(span); 
+
+
+
+
+
+    // Appliquer le thème de l'utilisateur dès le début
+
+
+    const savedTheme = localStorage.getItem("theme");
+
+
+    if (savedTheme === "dark") {
+
+
+        input.checked = true;
+
+
+        document.body.classList.add("dark");
+
+
+        document.body.classList.remove("light");
+
+
+    } else if (savedTheme === "light") {
+
+
+        input.checked = false;
+
+
+        document.body.classList.add("light");
+
+
+        document.body.classList.remove("dark");
+
+
+    } else {
+
+
+        // Si pas de thème sauvegardé, par défaut "dark"
+
+
+        document.body.classList.add("dark");
+
+
+        localStorage.setItem("theme", "dark");
+
+
+    }
+
+
+    // Changer le thème en fonction de l'état du bouton
+
+
+    input.addEventListener("change", () => {
+
+
+        if (input.checked) {
+
+
+            document.body.classList.add("dark");
+
+
+            document.body.classList.remove("light");
+
+
+            localStorage.setItem("theme", "dark");
+
+
+        } else {
+
+
+            document.body.classList.add("light");
+
+
+            document.body.classList.remove("dark");
+
+
+            localStorage.setItem("theme", "light");
+
+
+        }
+
+
+    });
+
+}
+
+
+
 function change_theme(){
     let a = 1;
 }
-
-
-function create_theme_changer_header(container){
-    let themeChangerButton = create_element("button", container, "themeChangerHeader");
-    themeChangerButton.onclick = change_theme;
-
-    let themeChangerIcon = create_element("img", themeChangerButton, "themeChangerIcon");
-    themeChangerIcon.src ="toto.png";
-}
-
 
 
 function create_date_info_header(container){

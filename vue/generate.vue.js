@@ -15,7 +15,7 @@ function create_generate_footer(container){
     generateButton.onclick = generate_tt;
 
     let generateIcon = create_element("img", generateButton, "generateIcon");
-    generateIcon.src = "toto.txt";
+    generateIcon.src = "/info3/vue/style/img/chargement.png";
 
 }
 

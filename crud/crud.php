@@ -82,11 +82,13 @@ Class_Teacher :
 
 - insert_class_teacher($conn,$teacher_id,$class_name)
 - delete_class_teacher($conn,$teacher_id,$class_name)
+- delete_all_class_teacher($conn,$teacher_id) -> supprime toutes les classes associés à un teacher
 
 Teacher_Subject
 
 - insert_teacher_subject($conn,$id_teacher,$id_subject)
 - delete_teacher_subject($conn,$id_teacher,$id_subject)
+- delete_all_teacher_subject($conn,$id_teacher) -> supprime toutes les matières associés à un teacher
 
 
 */
@@ -470,6 +472,13 @@ function delete_class_teacher($conn,$teacher_id,$class_name){
     return $res;
 }
 
+// Supprime toutes les class_teacher d'un teacher
+function delete_all_class_teacher($conn,$teacher_id){
+    $sql="DELETE FROM class_teacher WHERE teacher_id=$teacher_id";
+    $res=mysqli_query($conn,$sql);
+    return $res;
+}
+
 
 // ---------- teacher_subject ----------
 
@@ -483,6 +492,13 @@ function insert_teacher_subject($conn,$id_teacher,$id_subject){
 // Supprime une teacher_subject
 function delete_teacher_subject($conn,$id_teacher,$id_subject){
     $sql="DELETE FROM teacher_subject WHERE id_teacher=$id_teacher AND id_subject=$id_subject";
+    $res=mysqli_query($conn,$sql);
+    return $res;
+}
+
+// Supprime toutes les teacher_subject d'un teacher
+function delete_all_teacher_subject($conn,$id_teacher){
+    $sql="DELETE FROM teacher_subject WHERE id_teacher=$id_teacher";
     $res=mysqli_query($conn,$sql);
     return $res;
 }

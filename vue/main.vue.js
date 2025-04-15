@@ -47,7 +47,7 @@ function create_teacher_icons(container, classes){
     createNoteVueButton.onclick = create_note_view;
 
     let createNoteIcon = create_element("img", createNoteVueButton, "createNoteIcon");
-    createNoteIcon.src = "toto.png";
+    createNoteIcon.src = "vue/style/img/bloc-notes.png";
 
     create_class_select(buttonContainer, classes);
 }
@@ -139,6 +139,11 @@ function create_admin_icons(container, classes){
     generateButton.onclick = create_generate_tt_view;
     
     let generateIcon = create_element("img", generateButton, "generateIconMain");
-    generateIcon.src = "toto.png";
+    generateIcon.src = "/info3/vue/style/img/chargement.png";
 
+    let buttonContainer = document.querySelector("#buttonMainSection");
+
+    // Temporaire !!!
+    let bouton_admin = create_element("button",buttonContainer,'',"Admin");
+    bouton_admin.addEventListener("click", () => create_user_vue());
 }
