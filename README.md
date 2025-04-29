@@ -14,6 +14,8 @@
 
 - ??/04/25 : (avant les vacances)
 
+- 19/05/25 : fin du projet
+
 - 22/05/25 : présentation
 
 
