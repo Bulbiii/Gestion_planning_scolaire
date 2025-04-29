@@ -75,7 +75,7 @@ function add_courses(schedule, action_on_cell=select_course){
             let cell = document.querySelector("#cell_"+day+"_"+(hour - 8)); //  hour start at 8 
             cell.disabled = false;
 
-            cell.addEventListener("click", action_on_cell); // creating popup
+            cell.onclick = action_on_cell; // creating popup
 
             cell.innerHTML = schedule[day][hour].title; // course's name
             cell.value = courseId;
@@ -156,6 +156,9 @@ function update_tt(){
 
     cells.forEach(cell => {
         cell.innerHTML = ""; // remove content
+        if (cell.classList.contains("courseCell")){
+            cell.classList.remove("courseCell");
+        }
     });
     
     

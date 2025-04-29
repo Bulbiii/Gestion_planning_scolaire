@@ -61,8 +61,6 @@ function generated_tt_to_correct_tt(tt){
 
 
 function move_course() {
-    
-    
     let cells = document.querySelectorAll(".centerCell");
     
     if (this.classList.contains("isMoved")){
@@ -70,10 +68,11 @@ function move_course() {
         
         remove_highlight(cells);
         enable_cells(cells)
+        
     } else {
+        
         this.classList.add("isMoved");
         
-        console.log("toto");
         disable_unavailable_cells(cells, this.id); // disable anavailable cells except the selected one
         highlight_available_cells(cells);
     }
@@ -119,35 +118,18 @@ function remove_highlight(cells){
 function accept_course_movement(){
     let cells = document.querySelectorAll(".centerCell");
 
-    let former_cell = get_moving_course(cells);
+    let former_cell = document.querySelector(".isMoved");
     
     this.innerHTML = former_cell.innerHTML;
     this.classList.add("courseCell");
-
+    this.classList.remove("highlight");
+    
     former_cell.innerHTML = "";
-    former_cell.classList.remove("courseCell");
     former_cell.classList.remove("isMoved");
+    former_cell.classList.remove("courseCell");
+    
 
     remove_highlight(cells);
     enable_cells(cells);
-}
 
-
-function get_moving_course(cells){
-    let moving_cell = null;
-    let i = 0;
-    while (i < cells.length && moving_cell == null){
-        let cell = cells[i];
-        console.log("titi");
-        
-        if (cell.innerHTML != "" && ! cell.disabled){
-            console.log("toto");
-            
-            moving_cell = cell;
-        }
-
-        i++;
-    }
-
-    return moving_cell;
 }

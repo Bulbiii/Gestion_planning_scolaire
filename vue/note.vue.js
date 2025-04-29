@@ -100,24 +100,23 @@ function create_rec_container(container){
     recLabel.for = "recDays";
 
     // Checkboxes container
-    let recCheckboxes = create_element("div", recContainer, "noteRecCheckboxes");
-    recCheckboxes.name = "recDays";
+    let recRadioForm = create_element("fieldset", recContainer, "noteRecRadioForm");
+    recRadioForm.name = "recDay";
 
     // Possible recurring days
     let possibleRecDays = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
 
     // Checkboxes
     possibleRecDays.forEach(day => {
-        // Recuring days checkboxes
-        let dayCheckbox = create_element("input", recCheckboxes, day+"_checkbox");
-        dayCheckbox.type = "checkbox";
-        dayCheckbox.name = day+"_checkbox";
+        // Recuring days radio buttons
+        let dayRadio = create_element("input", recRadioForm, day+"_radio");
+        dayRadio.type = "radio";
+        dayRadio.name = "recDay";
 
-        let dayLabel = create_element("label", recCheckboxes, day+"_label", day);
-        dayLabel.for = day+"checkbox";
+        let dayLabel = create_element("label", recRadioForm, day+"_radio_label", day);
+        dayLabel.for = day+"_radio";
     })  
 }
-
 
 
 function create_desc_container(container, note_obj){
@@ -149,33 +148,68 @@ function add_update_note_button(container, action, note_obj){
 
 }
 
+
+function get_rec_day(){
+    let res = "none";
+    
+    let radioContainer = document.querySelector("#noteRecRadioForm");
+    let i = 0;
+
+    console.log(radioContainer.children.length);
+    
+
+    while (i < radioContainer.children.length && res == "none"){
+        let radio = radioContainer.children[i*2];
+        console.log(radio);
+        
+        if (radio.checked){
+            res = radio.id.split("_")[0]; // get linked day
+        }
+
+        i++;
+    }
+
+    return res;
+}
+
 function get_form_data(){
     let startDate = document.querySelector("#noteUnavInputStartDate").value;
     let endDate = document.querySelector("#noteUnavInputEndDate").value;
     let startTime = document.querySelector("#noteUnavInputStartTime").value;
     let endTime = document.querySelector("#noteUnavInputEndTime").value;
+    let rec = get_rec_day();
     let desc = document.querySelector("#noteDescInput").value;
 
-    return {startDate : startDate, endDate : endDate, startTime : startTime, endTime : endTime, desc : desc};
+    return {startDate : startDate, endDate : endDate, startTime : startTime, endTime : endTime, desc : desc, rec : rec};
 }
 
 
 function add_note(){
     let fieldsData = get_form_data();
 
+    let params = {
+        table : "constraint",
+        type : "insert",
+        day : "...", 
+        date_start : fieldsData.startDate,
+        date_end : fieldsData.endDate,
+        h_start : fieldsData.startTime,
+        h_end : fieldsData.endTime,
+        desc : fieldsData.desc,
+        recurrent : false,
+        id_teacher : userTypeId
+    }
+
+    console.log(fieldsData.rec);
+    
+
+    if (fieldsData.rec != "none"){
+        params.day = fieldsData.rec;
+        params.recurrent = true;
+    }
+
     axios.get("/info3/json/json.php", {
-        params : {
-            table : "constraint",
-            type : "insert",
-            day : "...", 
-            date_start : fieldsData.startDate,
-            date_end : fieldsData.endDate,
-            h_start : fieldsData.startTime,
-            h_end : fieldsData.endTime,
-            desc : fieldsData.desc,
-            recurrent : false,
-            id_teacher : userTypeId
-        }
+        params
     }).then(res => {
         if (res.data == "erreur"){
             console.log("Erreur lors de la sauvegarde de la contrainte");
@@ -188,21 +222,27 @@ function add_note(){
 
 function update_note(){
     let fieldsData = get_form_data();
+    let params = {
+        table : "constraint",
+        type : "update",
+        id : this.value,
+        day : "...",
+        date_start : fieldsData.startDate,
+        date_end : fieldsData.endDate,
+        h_start : fieldsData.startTime,
+        h_end : fieldsData.endTime,
+        desc : fieldsData.desc,
+        recurrent : false,
+        id_teacher : userTypeId
+    }
+
+    if (fieldsData.rec != "none"){
+        params.day = fieldsData.rec;
+        params.recurrent = true;
+    }
 
     axios.get("/info3/json/json.php", {
-        params : {
-            table : "constraint",
-            type : "update",
-            id : this.value,
-            day : "...",
-            date_start : fieldsData.startDate,
-            date_end : fieldsData.endDate,
-            h_start : fieldsData.startTime,
-            h_end : fieldsData.endTime,
-            desc : fieldsData.desc,
-            recurrent : false,
-            id_teacher : userTypeId
-        }
+        params
     }).then(res => {
         if (res.data == "erreur"){
             console.log("Erreur lors de la sauvegarde de la contrainte");
@@ -278,6 +318,7 @@ function add_note_row_content(container, infos, userType){
 
     for (let info_type in infos) {
         if (info_type != "id" && info_type != "teacherId") {
+            if (info_type == )
             let cell = create_element("td", container, "", infos[info_type]);
             cell.classList.add(info_type + "CellNote");
         }
